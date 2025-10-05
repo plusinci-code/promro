@@ -27,7 +27,7 @@ from modules.llm import complete, translate
 from modules.campaigns import create_campaign, load_campaigns, load_campaign
 from modules.keywords import generate_keywords
 from modules.scrape_search import search_and_collect
-from modules.alternative_search import alternative_search_and_collect, get_recommended_search_methods, get_free_search_methods, get_paid_search_methods
+# Alternatif arama motorları kaldırıldı
 from modules.proxy_manager import ProxyManager, get_free_proxy_list, get_premium_proxy_list, get_proxy_recommendations
 from modules.scrape_maps import maps_scrape
 from modules.enrichment import enrich_dataframe
@@ -652,167 +652,43 @@ st.header("C) Arama Motoru Bazlı Data Çıkarma")
 st.subheader("🚀 Arama Yöntemi Seçimi")
 search_method = st.radio(
     "Hangi arama yöntemini kullanmak istiyorsunuz?",
-    ["Gelişmiş Selenium (Mevcut)", "Alternatif Arama Motorları (CAPTCHA Bypass)", "Hibrit Yaklaşım"],
-    help="Alternatif yöntemler CAPTCHA sorunlarını minimize eder"
+    ["Gelişmiş Selenium (Mevcut)"],
+    help="Sadece Gelişmiş Selenium arama motoru mevcut"
 )
 
-if search_method == "Alternatif Arama Motorları (CAPTCHA Bypass)":
-    st.info("🎯 **CAPTCHA Bypass Modu:** Bu yöntem Google'ın 'robot değilim' CAPTCHA'sını bypass eder!")
-    
-    col_alt1, col_alt2 = st.columns(2)
-    
-    with col_alt1:
-        st.subheader("🔍 Ücretsiz Arama Motorları")
-        free_methods = get_free_search_methods()
-        selected_free = st.multiselect(
-            "Ücretsiz Arama Motorları",
-            free_methods,
-            default=free_methods[:2],
-            help="CAPTCHA'sız, ücretsiz arama motorları"
-        )
-        
-        # Ücretsiz yöntemlerin açıklamaları
-        recommendations = get_recommended_search_methods()
-        for method in selected_free:
-            st.caption(f"• **{method.title()}:** {recommendations.get(method, 'Açıklama yok')}")
-    
-    with col_alt2:
-        st.subheader("💳 Ücretli API Servisleri")
-        paid_methods = get_paid_search_methods()
-        selected_paid = st.multiselect(
-            "Ücretli API Servisleri",
-            paid_methods,
-            help="Daha güvenilir ama ücretli API servisleri"
-        )
-        
-        # API anahtarları
-        api_keys = {}
-        if selected_paid:
-            st.subheader("🔑 API Anahtarları")
-            if "serpapi" in selected_paid:
-                api_keys["serpapi"] = st.text_input("SerpApi Key", value=os.getenv("SERPAPI_KEY", ""), type="password", help="https://serpapi.com/")
-            if "scrapingbee" in selected_paid:
-                api_keys["scrapingbee"] = st.text_input("ScrapingBee Key", value=os.getenv("SCRAPINGBEE_KEY", ""), type="password", help="https://www.scrapingbee.com/")
-    
-    # Seçilen yöntemleri birleştir
-    selected_methods = selected_free + selected_paid
-    
-    # Alternatif yöntemler için engines değişkenini tanımla
-    engines = selected_methods
-    
-    if not selected_methods:
-        st.warning("⚠️ En az bir arama yöntemi seçin!")
-        st.stop()
-    
-    # Alternatif yöntemler için ayarlar
-    st.subheader("⚙️ Arama Ayarları")
-    col_alt_settings1, col_alt_settings2 = st.columns(2)
-    
-    with col_alt_settings1:
-        per_kw = st.select_slider(
-            "Anahtar kelime başına sonuç limiti", 
-            options=[1, 5, 10, 30, 50, 100, 200, 1000], 
-            value=30,
-            help="Her anahtar kelime için kaç sonuç alınacak"
-        )
-    
-    with col_alt_settings2:
-        total_sites = st.select_slider(
-            "Toplam site limiti", 
-            options=[10, 30, 50, 100, 200, 500, 650, 1000, 10000], 
-            value=100,
-            help="Toplamda kaç siteye ziyaret edilecek"
-        )
-    
-    st.success(f"✅ **{len(selected_methods)} arama yöntemi** seçildi: {', '.join(selected_methods)}")
-
-elif search_method == "Hibrit Yaklaşım":
-    st.info("🔄 **Hibrit Mod:** Önce alternatif yöntemler, sonra Selenium ile devam eder")
-    
-    col_hybrid1, col_hybrid2 = st.columns(2)
-    
-    with col_hybrid1:
-        st.subheader("1️⃣ İlk Aşama: Alternatif Arama")
-        hybrid_alt_methods = st.multiselect(
-            "Alternatif Arama Motorları",
-            get_free_search_methods(),
-            default=get_free_search_methods()[:2],
-            help="CAPTCHA'sız başlangıç için"
-        )
-    
-    with col_hybrid2:
-        st.subheader("2️⃣ İkinci Aşama: Selenium")
-        hybrid_selenium_engines = st.multiselect(
-            "Selenium Arama Motorları",
-            ["Google", "Yandex", "Bing", "Yahoo"],
-            default=["Google"],
-            help="Alternatif yöntemler yetersizse kullanılır"
-        )
-    
-    if not hybrid_alt_methods and not hybrid_selenium_engines:
-        st.warning("⚠️ En az bir arama yöntemi seçin!")
-        st.stop()
-    
-    # Hibrit yaklaşım için engines değişkenini tanımla
-    engines = hybrid_alt_methods + hybrid_selenium_engines
-    
-    # Hibrit yaklaşım için ayarlar
-    st.subheader("⚙️ Arama Ayarları")
-    col_hybrid_settings1, col_hybrid_settings2 = st.columns(2)
-    
-    with col_hybrid_settings1:
-        per_kw = st.select_slider(
-            "Anahtar kelime başına sonuç limiti", 
-            options=[1, 5, 10, 30, 50, 100, 200, 1000], 
-            value=30,
-            help="Her anahtar kelime için kaç sonuç alınacak"
-        )
-    
-    with col_hybrid_settings2:
-        total_sites = st.select_slider(
-            "Toplam site limiti", 
-            options=[10, 30, 50, 100, 200, 500, 650, 1000, 10000], 
-            value=100,
-            help="Toplamda kaç siteye ziyaret edilecek"
-        )
-
-else:
-    # Geleneksel Selenium yöntemi
-    col_c1, col_c2 = st.columns(2)
-    with col_c1:
-        st.subheader("🔍 Arama Motoru Ayarları")
-        engines = st.multiselect(
-            "Arama Motorları", 
-            [
-                "Google", "Yandex", "Bing", "Yahoo",  # Geleneksel arama motorları
-                "DuckDuckGo", "Startpage", "Brave", "Ecosia", "Qwant"  # Alternatif arama motorları
-            ], 
-            default=["Google", "DuckDuckGo"],
-            help="Kullanılacak arama motorlarını seçin. Alternatif motorlar CAPTCHA'sızdır."
-        )
-    
-    per_kw = st.select_slider(
-        "Anahtar kelime başına sonuç limiti", 
-        options=[1, 5, 10, 30, 50, 100, 200, 1000], 
-        value=30,
-        help="Her anahtar kelime için kaç sonuç alınacak (sayfalama ile)"
+# Sadece Gelişmiş Selenium seçeneği kaldı
+col_c1, col_c2 = st.columns(2)
+with col_c1:
+    st.subheader("🔍 Arama Motoru Ayarları")
+    engines = st.multiselect(
+        "Arama Motorları", 
+        ["DuckDuckGo"], 
+        default=["DuckDuckGo"],
+        help="Sadece DuckDuckGo arama motoru mevcut."
     )
 
-    with col_c2:
-        st.subheader("⚙️ Gezinme Ayarları")
-        total_sites = st.select_slider(
-            "Toplam site limiti", 
-            options=[10, 30, 50, 100, 200, 500, 650, 1000, 10000], 
-            value=100,
-            help="Toplamda kaç siteye ziyaret edilecek"
-        )
-        
-        dwell = st.select_slider(
-            "Site başı gezinme süresi (saniye)", 
-            options=[2,10, 20, 30], 
-            value=2,
-            help="Her sitede ne kadar süre geçirilecek"
-        )
+per_kw = st.select_slider(
+    "Anahtar kelime başına sonuç limiti", 
+    options=[1, 5, 10, 30, 50, 100, 200, 1000], 
+    value=30,
+    help="Her anahtar kelime için kaç sonuç alınacak (sayfalama ile)"
+)
+
+with col_c2:
+    st.subheader("⚙️ Gezinme Ayarları")
+    total_sites = st.select_slider(
+        "Toplam site limiti", 
+        options=[10, 30, 50, 100, 200, 500, 650, 1000, 10000], 
+        value=100,
+        help="Toplamda kaç siteye ziyaret edilecek"
+    )
+    
+    dwell = st.select_slider(
+        "Site başı gezinme süresi (saniye)", 
+        options=[2,10, 20, 30], 
+        value=2,
+        help="Her sitede ne kadar süre geçirilecek"
+    )
 
 # Stealth mode seçeneği (sadece Selenium için)
 if search_method == "Gelişmiş Selenium (Mevcut)":
@@ -823,7 +699,7 @@ if search_method == "Gelişmiş Selenium (Mevcut)":
         use_stealth_mode = st.checkbox(
             "Gelişmiş Stealth Mode Kullan", 
             value=False,
-            help="CAPTCHA bypass için optimize edilmiş stealth teknikleri"
+            help="Gelişmiş stealth teknikleri"
         )
         
         headless_mode = st.checkbox(
@@ -835,7 +711,7 @@ if search_method == "Gelişmiş Selenium (Mevcut)":
     with col_stealth2:
         if use_stealth_mode:
             st.success("✅ **Stealth Mode Aktif**")
-            st.caption("• Gelişmiş CAPTCHA bypass")
+            st.caption("• Gelişmiş anti-detection")
             st.caption("• İnsan benzeri davranış")
             st.caption("• Gelişmiş fingerprinting koruması")
         else:
@@ -856,7 +732,7 @@ if search_method == "Gelişmiş Selenium (Mevcut)":
         use_proxy = st.checkbox(
             "Proxy Kullan", 
             value=False,
-            help="Farklı IP adresleri kullanarak CAPTCHA riskini azaltır"
+            help="Farklı IP adresleri kullanarak güvenliği artırır"
         )
         
         proxy_type = st.selectbox(
@@ -891,23 +767,13 @@ else:
     use_proxy = False
     proxy_list = []
 
-# CAPTCHA ayarları
-st.subheader("🔐 CAPTCHA Çözme Ayarları")
-col_captcha1, col_captcha2 = st.columns(2)
-with col_captcha1:
-    captcha_mode_c = st.selectbox(
-        "CAPTCHA Modu",
-        ["skip", "manual", "solver"],
-        index=2,
-        help="skip: CAPTCHA'lı siteleri atla, manual: Manuel çözüm, solver: Otomatik çöz"
-    )
-with col_captcha2:
-    anticaptcha_key_c = st.text_input(
-        "Anti-Captcha API Key", 
-        value=os.getenv("ANTICAPTCHA_API_KEY", ""),
-        type="password",
-        help="https://anti-captcha.com/ API anahtarı"
-    )
+# Gelişmiş ayarlar
+st.subheader("⚙️ Gelişmiş Ayarlar")
+col_adv1, col_adv2 = st.columns(2)
+with col_adv1:
+    st.info("🔧 **Otomatik Optimizasyon:** Sistem otomatik olarak en iyi performansı sağlar")
+with col_adv2:
+    st.info("🛡️ **Güvenlik:** Gelişmiş anti-detection teknikleri aktif")
 
 # Bilgilendirme
 if engines and per_kw and total_sites:
@@ -915,13 +781,7 @@ if engines and per_kw and total_sites:
     st.info(f"📊 **Tahmini işlem:** {len(engines)} arama motoru × {expected_pages} sayfa × {len(engines)} kelime = ~{len(engines) * expected_pages * 5} site ziyareti")
 
 # Buton metnini dinamik yap
-button_text = "🚀 C Adımını Çalıştır"
-if search_method == "Alternatif Arama Motorları (CAPTCHA Bypass)":
-    button_text += " (CAPTCHA Bypass)"
-elif search_method == "Hibrit Yaklaşım":
-    button_text += " (Hibrit)"
-else:
-    button_text += " (Selenium)"
+button_text = "🚀 C Adımını Çalıştır (Selenium)"
 
 do_c = st.button(button_text, type="primary")
 if do_c:
@@ -936,157 +796,7 @@ if do_c:
         status_text = st.empty()
         
         try:
-            if search_method == "Alternatif Arama Motorları (CAPTCHA Bypass)":
-                # Alternatif arama yöntemi
-                if not selected_methods:
-                    st.error("❌ En az bir arama yöntemi seçin.")
-                else:
-                    with st.spinner("🔍 Alternatif arama motorlarında CAPTCHA'sız tarama başlıyor..."):
-                        # Alternatif arama ile link toplama
-                        collected_links = alternative_search_and_collect(
-                            keywords=kws,
-                            search_methods=selected_methods,
-                            max_sites_total=int(total_sites),
-                            per_keyword_limit=int(per_kw),
-                            api_keys=api_keys
-                        )
-                        
-                        if collected_links:
-                            # Toplanan linkleri DataFrame'e dönüştür
-                            df = pd.DataFrame({
-                                "Firma Adı": [urlparse(link).netloc for link in collected_links],
-                                "Firma Websitesi": collected_links,
-                                "Firma Adresi": "",
-                                "Firma Ülkesi/Dil": "",
-                                "Telefon Numaraları": "",
-                                "Email Adresleri": "",
-                                "Sosyal Medya": "",
-                                "Firma Tipi": "Alternatif Arama",
-                                "Sayfa Başlığı": "",
-                                "Özet Metin": "",
-                                "Ziyaret Edilen Sayfa Sayısı": 1,
-                            })
-                            
-                            # CSV'ye kaydet
-                            df.to_csv(out_dir / "C_search_results.csv", index=False, encoding="utf-8-sig")
-                            
-                            progress_bar.progress(100)
-                            status_text.success("✅ CAPTCHA Bypass ile tamamlandı!")
-                            
-                            st.success(f"🎉 **{len(df)} firma** verisi CAPTCHA'sız toplandı!")
-                            st.info("💡 **Not:** Alternatif arama sadece link toplar. Detaylı veri için D adımını (Google Maps) kullanın.")
-                            
-                            # Veri tablosunu göster
-                            st.subheader("📋 Toplanan Veriler")
-                            st.dataframe(df.head(100), use_container_width=True)
-                            
-                            # İndirme butonu
-                            csv_data = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8')
-                            st.download_button(
-                                label="📥 CSV İndir",
-                                data=csv_data,
-                                file_name=f"C_search_results_captcha_bypass_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.csv",
-                                mime="text/csv"
-                            )
-                        else:
-                            st.warning("⚠️ Alternatif arama motorlarından veri toplanamadı.")
-                            
-            elif search_method == "Hibrit Yaklaşım":
-                # Hibrit yaklaşım
-                if not hybrid_alt_methods and not hybrid_selenium_engines:
-                    st.error("❌ En az bir arama yöntemi seçin.")
-                else:
-                    with st.spinner("🔄 Hibrit yaklaşım: Önce alternatif, sonra Selenium..."):
-                        # 1. Aşama: Alternatif arama
-                        if hybrid_alt_methods:
-                            status_text.text("1️⃣ Alternatif arama motorları ile başlıyor...")
-                            collected_links = alternative_search_and_collect(
-                                keywords=kws,
-                                search_methods=hybrid_alt_methods,
-                                max_sites_total=int(total_sites) // 2,  # Yarısını alternatif ile topla
-                                per_keyword_limit=int(per_kw) // 2,
-                                api_keys={}
-                            )
-                        else:
-                            collected_links = []
-                        
-                        # 2. Aşama: Selenium (eğer yetersizse)
-                        if len(collected_links) < int(total_sites) // 2 and hybrid_selenium_engines:
-                            status_text.text("2️⃣ Selenium ile devam ediliyor...")
-                            df_selenium = search_and_collect(
-                                keywords=kws, 
-                                engines=hybrid_selenium_engines, 
-                                max_sites_total=int(total_sites) - len(collected_links), 
-                                per_keyword_limit=int(per_kw), 
-                                dwell_seconds=int(dwell), 
-                                out_dir=out_dir,
-                                anticaptcha_api_key=anticaptcha_key_c if captcha_mode_c == "solver" else None,
-                                use_stealth_mode=True,  # Hibrit modda stealth kullan
-                                headless_mode=True,     # Hibrit modda headless kullan
-                                use_proxy=False,        # Hibrit modda proxy kullanma
-                                proxy_list=[]
-                            )
-                            
-                            # Sonuçları birleştir
-                            if len(collected_links) > 0:
-                                # Alternatif sonuçları DataFrame'e dönüştür
-                                df_alt = pd.DataFrame({
-                                    "Firma Adı": [urlparse(link).netloc for link in collected_links],
-                                    "Firma Websitesi": collected_links,
-                                    "Firma Adresi": "",
-                                    "Firma Ülkesi/Dil": "",
-                                    "Telefon Numaraları": "",
-                                    "Email Adresleri": "",
-                                    "Sosyal Medya": "",
-                                    "Firma Tipi": "Alternatif Arama",
-                                    "Sayfa Başlığı": "",
-                                    "Özet Metin": "",
-                                    "Ziyaret Edilen Sayfa Sayısı": 1,
-                                })
-                                
-                                # Selenium sonuçları ile birleştir
-                                df = pd.concat([df_alt, df_selenium], ignore_index=True)
-                            else:
-                                df = df_selenium
-                        else:
-                            # Sadece alternatif sonuçlar
-                            df = pd.DataFrame({
-                                "Firma Adı": [urlparse(link).netloc for link in collected_links],
-                                "Firma Websitesi": collected_links,
-                                "Firma Adresi": "",
-                                "Firma Ülkesi/Dil": "",
-                                "Telefon Numaraları": "",
-                                "Email Adresleri": "",
-                                "Sosyal Medya": "",
-                                "Firma Tipi": "Hibrit Arama",
-                                "Sayfa Başlığı": "",
-                                "Özet Metin": "",
-                                "Ziyaret Edilen Sayfa Sayısı": 1,
-                            })
-                        
-                        # CSV'ye kaydet
-                        df.to_csv(out_dir / "C_search_results.csv", index=False, encoding="utf-8-sig")
-                        
-                        progress_bar.progress(100)
-                        status_text.success("✅ Hibrit yaklaşım ile tamamlandı!")
-                        
-                        st.success(f"🎉 **{len(df)} firma** verisi hibrit yöntemle toplandı!")
-                        
-                        # Veri tablosunu göster
-                        st.subheader("📋 Toplanan Veriler")
-                        st.dataframe(df.head(100), use_container_width=True)
-                        
-                        # İndirme butonu
-                        csv_data = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8')
-                        st.download_button(
-                            label="📥 CSV İndir",
-                            data=csv_data,
-                            file_name=f"C_search_results_hybrid_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.csv",
-                            mime="text/csv"
-                        )
-                        
-            else:
-                # Geleneksel Selenium yöntemi
+            # Sadece Gelişmiş Selenium yöntemi
                 if not engines:
                     st.error("❌ En az bir arama motoru seçin.")
                 else:
@@ -1099,7 +809,7 @@ if do_c:
                                 per_keyword_limit=int(per_kw), 
                                 dwell_seconds=int(dwell), 
                                 out_dir=out_dir,
-                                anticaptcha_api_key=anticaptcha_key_c if captcha_mode_c == "solver" else None,
+                                # CAPTCHA sistemi kaldırıldı
                                 use_stealth_mode=use_stealth_mode,
                                 headless_mode=headless_mode,
                                 use_proxy=use_proxy,
@@ -1147,7 +857,7 @@ if do_c:
             progress_bar.progress(0)
             status_text.error(f"❌ Hata: {str(e)}")
             st.error(f"Bir hata oluştu: {str(e)}")
-            st.info("💡 **Çözüm önerileri:**\n- Chrome tarayıcısının güncel olduğundan emin olun\n- İnternet bağlantınızı kontrol edin\n- CAPTCHA ayarlarını gözden geçirin\n- Alternatif arama yöntemlerini deneyin")
+            st.info("💡 **Çözüm önerileri:**\n- Chrome tarayıcısının güncel olduğundan emin olun\n- İnternet bağlantınızı kontrol edin\n- Alternatif arama yöntemlerini deneyin")
 
 # 3D) Google Maps Bazlı Data Çıkarma
 st.header("D) Google Maps Bazlı Data Çıkarma")
@@ -2059,26 +1769,13 @@ with col_i2:
     dwell_forms = st.select_slider("Site başı bekleme süresi (saniye)", options=[3,5,8,10,15,20], value=8)
     headless_forms = st.checkbox("Headless (görünmez tarayıcı)", value=False, help="Tarayıcı görünür olsun ki işlemleri takip edebilin")
 
-# CAPTCHA Ayarları
-st.subheader("🔐 CAPTCHA Çözme Ayarları")
-col_captcha1, col_captcha2 = st.columns(2)
-with col_captcha1:
-    captcha_mode = st.selectbox(
-        "CAPTCHA Modu",
-        ["skip", "manual", "solver"],
-        index=2,
-        help="skip: CAPTCHA'lı siteleri atla, manual: Manuel çözüm için bekle, solver: Anti-Captcha API ile otomatik çöz"
-    )
-with col_captcha2:
-    anticaptcha_api_key = st.text_input(
-        "Anti-Captcha API Key", 
-        value=os.getenv("ANTICAPTCHA_API_KEY", ""),
-        type="password",
-        help="https://anti-captcha.com/ sitesinden alınan API anahtarı"
-    )
-
-if captcha_mode == "solver" and not anticaptcha_api_key:
-    st.warning("⚠️ Solver modu için Anti-Captcha API anahtarı gereklidir!")
+# Gelişmiş Ayarlar
+st.subheader("⚙️ Gelişmiş Ayarlar")
+col_adv1, col_adv2 = st.columns(2)
+with col_adv1:
+    st.info("🔧 **Otomatik Optimizasyon:** Sistem otomatik olarak en iyi performansı sağlar")
+with col_adv2:
+    st.info("🛡️ **Güvenlik:** Gelişmiş anti-detection teknikleri aktif")
 
 # Form bilgileri
 st.subheader("📝 Form Bilgileri")
@@ -2182,8 +1879,7 @@ if do_i:
                 max_sites=max_sites,
                 dwell_seconds=float(dwell_forms),
                 headless=headless_forms,
-                captcha_mode=captcha_mode,
-                api_key=anticaptcha_api_key if captcha_mode == "solver" else None,
+                # CAPTCHA sistemi kaldırıldı
                 domain_list_file=None,  # Zaten website listesi hazır
                 personalized_content_map=f_map if f_map else None
             )
@@ -2227,4 +1923,4 @@ if do_i:
         progress_bar.progress(0)
         status_text.error(f"❌ Hata: {str(e)}")
         st.error(f"Form doldurma sırasında hata oluştu: {str(e)}")
-        st.info("💡 **Çözüm önerileri:**\n- Chrome tarayıcısının güncel olduğundan emin olun\n- Website listesini kontrol edin\n- CAPTCHA ayarlarını gözden geçirin")
+        st.info("💡 **Çözüm önerileri:**\n- Chrome tarayıcısının güncel olduğundan emin olun\n- Website listesini kontrol edin")
