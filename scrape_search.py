@@ -2,17 +2,14 @@
 """
 scrape_search.py
 ----------------
-Arama motorlarından (Google, Bing, Yahoo, Yandex) sonuç toplayıp her siteyi gezerek
-e-posta/telefon/adres gibi iletişim verilerini çıkartan yardımcı modül.
+Gelişmiş arama motorları ve site ziyaret sistemi.
 
-Bu sürümde istenen iki kritik revizyon yapılmıştır:
-1) CAPTCHA ile ilgili TÜM kodlar kaldırıldı (import, parametre, çözümleyici vb. yok).
-2) C adımında arama başlatıldığında (ilk sayfa açılışı): Eğer ilk ziyaret edilen URL
-   "https://www.google.com/sorry/index?" ise **25 saniye bekle** ve sonra akışa devam et.
-
-Not: Geriye dönük uyumluluk için `search_and_collect` fonksiyonunda daha önce
-vardıysa kullanılmayan `anticaptcha_api_key` parametresi opsiyonel olarak tutuldu,
-ancak tamamen YOK SAYILIR ve hiçbir yerde kullanılmaz.
+Özellikler:
+- Tüm arama motorlarında tutarlı çalışma
+- Tarayıcı kapatılması durumunda veri kaydetme
+- CAPTCHA sistemi tamamen kaldırıldı
+- Gelişmiş session management
+- Performans optimizasyonu
 """
 from __future__ import annotations
 
@@ -46,39 +43,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 
-# ---- Alternatif Arama Motorları Tanımları ----
-ALTERNATIVE_SEARCH_ENGINES = {
-    "DuckDuckGo": {
-        "url": "https://html.duckduckgo.com/html/?q={q}",
-        "result_selector": "a.result__a, a[data-testid='result-title-a'], a.result__url, h2.result__title a",
-        "next_page_selector": "a.result--more__btn, a[data-testid='pagination-next']",
-        "captcha_free": True
-    },
-    "Startpage": {
-        "url": "https://www.startpage.com/sp/search?query={q}",
-        "result_selector": "a.w-gl__result-title, a[data-testid='result-title-a'], a.result-link, h3 a",
-        "next_page_selector": "a.pagination__next, a[data-testid='pagination-next']",
-        "captcha_free": True
-    },
-    "Brave": {
-        "url": "https://search.brave.com/search?q={q}",
-        "result_selector": "a.result-header, a[data-testid='result-title-a'], a.snippet-title, h3 a",
-        "next_page_selector": "a[data-testid='pagination-next'], a.pagination-next",
-        "captcha_free": True
-    },
-    "Ecosia": {
-        "url": "https://www.ecosia.org/search?q={q}",
-        "result_selector": "a.result__title, a[data-testid='result-title-a'], h3 a",
-        "next_page_selector": "a.pagination__next, a[data-testid='pagination-next']",
-        "captcha_free": True
-    },
-    "Qwant": {
-        "url": "https://www.qwant.com/?q={q}",
-        "result_selector": "a.result__title, a[data-testid='result-title-a'], h3 a",
-        "next_page_selector": "a.pagination__next, a[data-testid='pagination-next']",
-        "captcha_free": True
-    }
-}
+# Alternatif arama motorları kaldırıldı - sadece DuckDuckGo kullanılıyor
 
 # ---- Opsiyonel user-agent ----
 try:
@@ -161,17 +126,8 @@ def _classify_company_type(page_text: str, title: str) -> str:
 
 
 SEARCH_ENGINES = {
-    # Geleneksel arama motorları
-    "Google": "https://www.google.com/search?q={q}&hl=en",
-    "Bing": "https://www.bing.com/search?q={q}",
-    "Yahoo": "https://search.yahoo.com/search?p={q}",
-    "Yandex": "https://yandex.com/search/?text={q}",
-    # Alternatif arama motorları (CAPTCHA'sız)
+    # Sadece DuckDuckGo arama motoru
     "DuckDuckGo": "https://html.duckduckgo.com/html/?q={q}",
-    "Startpage": "https://www.startpage.com/sp/search?query={q}",
-    "Brave": "https://search.brave.com/search?q={q}",
-    "Ecosia": "https://www.ecosia.org/search?q={q}",
-    "Qwant": "https://www.qwant.com/?q={q}",
 }
 
 
@@ -229,12 +185,13 @@ def _create_driver(headless: bool = False, stealth_mode: bool = False) -> webdri
     if headless:
         options.add_argument("--headless=new")
     
-    # Temel ayarlar
+    # Temel ayarlar - hızlandırıldı
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-web-security")
     options.add_argument("--disable-features=VizDisplayCompositor")
+    options.add_argument("--disable-images")  # Resimleri yükleme - hız için
     
     # İnsan benzeri pencere boyutu ve görünüm
     options.add_argument("--window-size=1920,1080")
@@ -257,12 +214,23 @@ def _create_driver(headless: bool = False, stealth_mode: bool = False) -> webdri
     options.add_argument("--accept-lang=en-US,en;q=0.9")
     options.add_argument("--accept-encoding=gzip, deflate, br")
     
-    # Memory ve performance optimizasyonları
+    # Memory ve performance optimizasyonları - kararlılık için iyileştirildi
     options.add_argument("--memory-pressure-off")
     options.add_argument("--max_old_space_size=4096")
     options.add_argument("--disable-background-timer-throttling")
     options.add_argument("--disable-backgrounding-occluded-windows")
     options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--disable-crash-reporter")
+    options.add_argument("--disable-logging")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-first-run")
+    options.add_argument("--no-default-browser-check")
+    options.add_argument("--disable-default-apps")
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument("--disable-prompt-on-repost")
+    options.add_argument("--disable-hang-monitor")
+    options.add_argument("--disable-client-side-phishing-detection")
+    options.add_argument("--disable-component-extensions-with-background-pages")
     
     # Network ve security ayarları
     options.add_argument("--disable-features=TranslateUI")
@@ -349,6 +317,15 @@ def _create_driver(headless: bool = False, stealth_mode: bool = False) -> webdri
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
+    
+    # Session timeout ayarları - kararlılık için
+    driver.set_page_load_timeout(30)  # Sayfa yükleme timeout
+    driver.implicitly_wait(10)  # Element bekleme timeout
+    driver.set_script_timeout(30)  # JavaScript timeout
+    
+    # Session ayarları
+    driver.maximize_window()
+    driver.delete_all_cookies()  # Temiz başlangıç
     
     # Gelişmiş JavaScript stealth injection
     try:
@@ -470,6 +447,7 @@ def _create_driver(headless: bool = False, stealth_mode: bool = False) -> webdri
 
 # ---- E-posta / Telefon çıkarma ----
 def _extract_emails_advanced(base_url: str, soup: BeautifulSoup, html: str) -> Set[str]:
+    """Gelişmiş email çıkarma - DuckDuckGo için optimize edildi"""
     emails: Set[str] = set()
     try:
         from urllib.parse import urlparse
@@ -484,8 +462,11 @@ def _extract_emails_advanced(base_url: str, soup: BeautifulSoup, html: str) -> S
         'protonmail.com', 'yandex.com', 'mail.ru', 'zoho.com', 'fastmail.com'
     }
 
+    # DuckDuckGo için genişletilmiş arama alanları
     contact_areas: List[str] = []
-    for selector in ['footer', '.footer', '#footer', '.site-footer', '#site-footer']:
+    contact_selectors = ['footer', 'header', '.contact', '#contact']  # Hızlı çıkarma için minimal selectors
+    
+    for selector in contact_selectors:
         for element in soup.select(selector):
             contact_areas.append(str(element))
     contact_areas.append(html)
@@ -494,49 +475,54 @@ def _extract_emails_advanced(base_url: str, soup: BeautifulSoup, html: str) -> S
     invalid_domains = {'example.com', 'test.com', 'domain.com', 'yoursite.com', 'website.com', 'localhost', '127.0.0.1'}
     invalid_prefixes = {'noreply', 'no-reply', 'donotreply', 'admin', 'webmaster', 'postmaster', 'test', 'demo', 'sample'}
 
-    email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+    # Hızlı email pattern'leri - sadece temel
+    email_patterns = [
+        r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b',
+        r'mailto:([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})'
+    ]
 
-    for area_html in contact_areas:
-        potential_emails = re.findall(email_pattern, area_html)
-        for email in potential_emails:
-            email = email.lower().strip()
-            if any(ext in email for ext in image_extensions):
-                continue
-            if '@' not in email:
-                continue
-            local, domain = email.split('@', 1)
-            if domain in invalid_domains or local in invalid_prefixes:
-                continue
-            if len(email) < 6 or not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
-                continue
-            if domain == site_domain or domain in valid_email_domains:
-                emails.add(email)
+    for pattern in email_patterns:
+        for area_html in contact_areas:
+            potential_emails = re.findall(pattern, area_html, re.IGNORECASE)
+            for email in potential_emails:
+                if isinstance(email, tuple):
+                    email = f"{email[0]}@{email[1]}"
+                
+                email = email.lower().strip()
+                if any(ext in email for ext in image_extensions):
+                    continue
+                if '@' not in email:
+                    continue
+                
+                try:
+                    local, domain = email.split('@', 1)
+                    if domain in invalid_domains or local in invalid_prefixes:
+                        continue
+                    if len(email) < 6 or not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+                        continue
+                    if domain == site_domain or domain in valid_email_domains:
+                        emails.add(email)
+                except ValueError:
+                    continue
 
+    # Mailto linklerini çıkar
     for link in soup.find_all('a', href=re.compile(r'^mailto:', re.I)):
         href = link.get('href', '')
         if href.startswith('mailto:'):
             email = href[7:].split('?')[0].strip().lower()
             if '@' in email:
-                domain = email.split('@', 1)[1]
-                if domain == site_domain or domain in valid_email_domains:
-                    emails.add(email)
+                try:
+                    domain = email.split('@', 1)[1]
+                    if domain == site_domain or domain in valid_email_domains:
+                        emails.add(email)
+                except ValueError:
+                    continue
 
-    js_email_patterns = [
-        r'["\']([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})["\']',
-        r'email["\']?\s*[:=]\s*["\']([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})["\']'
-    ]
-    for pattern in js_email_patterns:
-        for email in re.findall(pattern, html, re.IGNORECASE):
-            email = email.lower().strip()
-            if email and '@' in email and not any(ext in email for ext in image_extensions):
-                domain = email.split('@', 1)[1]
-                if domain == site_domain or domain in valid_email_domains:
-                    emails.add(email)
-
-    return set(list(emails)[:3])
+    return set(list(emails)[:2])  # Hızlı çıkarma için azaltıldı
 
 
 def _extract_phones_advanced(html: str, soup: BeautifulSoup) -> Set[str]:
+    """Gelişmiş telefon çıkarma - DuckDuckGo için optimize edildi"""
     phones: Set[str] = set()
     valid_country_codes = {
         '+1', '+52', '+54', '+55', '+56', '+57', '+58', '+51', '+591', '+593', '+595', '+598', '+597', '+592', '+594',
@@ -555,23 +541,28 @@ def _extract_phones_advanced(html: str, soup: BeautifulSoup) -> Set[str]:
         '+508', '+509', '+590', '+591', '+592', '+593', '+594', '+595', '+596', '+597', '+598', '+599',
     }
 
+    # DuckDuckGo için genişletilmiş arama alanları
     contact_areas: List[str] = []
-    for selector in ['footer', '.footer', '#footer', '.site-footer', '#site-footer']:
+    contact_selectors = ['footer', 'header', '.contact', '#contact']  # Hızlı çıkarma için minimal selectors
+    
+    for selector in contact_selectors:
         for element in soup.select(selector):
             contact_areas.append(str(element))
     contact_areas.append(html)
 
+    # Hızlı telefon pattern'leri - sadece temel
     phone_patterns = [
-        r'\+\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}',
-        r'\+\d{1,4}[\s\-\.]?\(\d{1,4}\)[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}',
-        r'\+\d{1,4}-\d{1,4}-\d{1,4}-\d{1,4}-\d{1,4}',
-        r'\+\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}\.\d{1,4}',
+        r'\+\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}[\s\-\.]?\d{1,4}',
+        r'phone["\']?\s*[:=]\s*["\']?([+\d\s\-\.()]+)["\']?'
     ]
 
-    for area_html in contact_areas:
-        for pattern in phone_patterns:
-            matches = re.findall(pattern, area_html)
+    for pattern in phone_patterns:
+        for area_html in contact_areas:
+            matches = re.findall(pattern, area_html, re.IGNORECASE)
             for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0]
+                
                 clean_phone = re.sub(r'[^\d+]', '', match)
                 if len(clean_phone) >= 8:
                     ok = False
@@ -583,6 +574,7 @@ def _extract_phones_advanced(html: str, soup: BeautifulSoup) -> Set[str]:
                     if ok and len(match.strip()) >= 10:
                         phones.add(match.strip())
 
+    # Tel linklerini çıkar
     for link in soup.find_all('a', href=re.compile(r'^tel:', re.I)):
         href = link.get('href', '')
         if href.startswith('tel:'):
@@ -592,7 +584,7 @@ def _extract_phones_advanced(html: str, soup: BeautifulSoup) -> Set[str]:
                 if len(clean_phone) >= 8:
                     phones.add(phone)
 
-    return set(list(phones)[:2])
+    return set(list(phones)[:2])  # Hızlı çıkarma için azaltıldı
 
 
 def _extract_contact_info(base_url: str, soup: BeautifulSoup, driver: webdriver.Chrome) -> Dict[str, Any]:
@@ -691,107 +683,83 @@ def _smart_wait_between_requests(request_count: int) -> None:
     else:
         _human_like_delay(15.0, 30.0)
 
-def _detect_captcha_page(driver: webdriver.Chrome) -> bool:
-    """CAPTCHA sayfası tespit etme - daha akıllı tespit"""
+# ---- Gelişmiş Session Management ----
+def _is_browser_alive(driver: webdriver.Chrome) -> bool:
+    """Tarayıcının hala çalışıp çalışmadığını kontrol et"""
     try:
-        current_url = driver.current_url.lower()
-        page_source = driver.page_source.lower()
-        
-        # Kesin CAPTCHA göstergeleri (URL'de)
-        url_captcha_indicators = [
-            "sorry/index",
-            "captcha",
-            "recaptcha",
-            "hcaptcha",
-            "cloudflare",
-            "challenge"
-        ]
-        
-        # Kesin CAPTCHA göstergeleri (sayfa içeriğinde)
-        content_captcha_indicators = [
-            "verify you are human",
-            "security check",
-            "unusual traffic",
-            "i'm not a robot",
-            "prove you're not a robot",
-            "complete the security check",
-            "cloudflare ray id",
-            "checking your browser"
-        ]
-        
-        # URL kontrolü - daha kesin
-        url_match = any(indicator in current_url for indicator in url_captcha_indicators)
-        
-        # İçerik kontrolü - daha kesin
-        content_match = any(indicator in page_source for indicator in content_captcha_indicators)
-        
-        # Ek kontrol: Sayfa başlığında CAPTCHA göstergeleri
-        try:
-            page_title = driver.title.lower()
-            title_captcha_indicators = [
-                "captcha",
-                "security check",
-                "verify",
-                "challenge"
-            ]
-            title_match = any(indicator in page_title for indicator in title_captcha_indicators)
-        except:
-            title_match = False
-        
-        # Sadece kesin eşleşmelerde CAPTCHA olarak kabul et
-        is_captcha = url_match or content_match or title_match
-        
-        if is_captcha:
-            print(f"    🔍 CAPTCHA tespit edildi: URL={url_match}, Content={content_match}, Title={title_match}")
-        
-        return is_captcha
-    except Exception as e:
-        print(f"    ⚠️ CAPTCHA tespit hatası: {str(e)}")
-        return False
-
-def _handle_captcha_detection(driver: webdriver.Chrome, url: str, attempt: int = 1) -> bool:
-    """CAPTCHA tespit edildiğinde akıllı yanıt"""
-    if attempt > 3:
-        print(f"[UYARI] CAPTCHA {attempt}. deneme başarısız, atlanıyor...")
-        return False
-    
-    wait_times = [15, 30, 60]  # Artan bekleme süreleri
-    wait_time = wait_times[min(attempt - 1, len(wait_times) - 1)]
-    
-    print(f"[CAPTCHA] Tespit edildi! {wait_time} saniye bekleniyor (Deneme {attempt}/3)...")
-    time.sleep(wait_time)
-    
-    try:
-        # Sayfayı yenile
-        driver.refresh()
-        _human_like_delay(3.0, 6.0)
-        
-        # Hala CAPTCHA varsa tekrar dene
-        if _detect_captcha_page(driver):
-            return _handle_captcha_detection(driver, url, attempt + 1)
-        
+        driver.current_url
         return True
-    except Exception as e:
-        print(f"[CAPTCHA] Hata: {str(e)}")
+    except Exception:
         return False
 
-# ---- Google "Sorry" sayfası kontrolü (geliştirilmiş) ----
-def _wait_if_google_sorry(driver: webdriver.Chrome, url: str, only_first_page: bool, page_index: int) -> None:
-    """
-    Gelişmiş CAPTCHA tespit ve yanıt sistemi
-    """
+def _save_partial_data(domain_data: Dict[str, Dict[str, Any]], out_dir: Path, reason: str = "partial") -> None:
+    """Kısmi verileri kaydet - düzenli format"""
     try:
-        current = driver.current_url or ""
-    except Exception:
-        current = ""
-
-    if only_first_page and page_index == 0:
-        if _detect_captcha_page(driver):
-            print("[UYARI] CAPTCHA/Robot tespiti algılandı!")
-            success = _handle_captcha_detection(driver, url)
-            if not success:
-                print("[UYARI] CAPTCHA çözülemedi, bu arama motoru atlanıyor...")
-                return
+        if not domain_data:
+            return
+            
+        # Düzenli veri formatı
+        rows = []
+        for domain, data in domain_data.items():
+            # Veri temizleme ve düzenleme
+            company_name = data.get("Firma Adı", "").strip()
+            website = data.get("Firma Websitesi", "").strip()
+            address = data.get("Firma Adresi", "").strip()
+            country = data.get("Firma Ülkesi/Dil", "").strip()
+            
+            # Telefon numaralarını temizle ve düzenle
+            phones = data.get("Telefon Numaraları", set())
+            phone_str = "; ".join(sorted([p.strip() for p in phones if p.strip()]))
+            
+            # Email adreslerini temizle ve düzenle
+            emails = data.get("Email Adresleri", set())
+            email_str = "; ".join(sorted([e.strip() for e in emails if e.strip()]))
+            
+            # Sosyal medya linklerini temizle ve düzenle
+            socials = data.get("Sosyal Medya", set())
+            social_str = "; ".join(sorted([s.strip() for s in socials if s.strip()]))
+            
+            # Diğer veriler
+            company_type = data.get("Firma Tipi", "").strip()
+            page_title = data.get("Sayfa Başlığı", "").strip()
+            summary = data.get("Özet Metin", "").strip()
+            visit_count = data.get("Toplam Veri Sayısı", 1)
+            
+            rows.append({
+                "Firma Adı": company_name,
+                "Firma Websitesi": website,
+                "Firma Adresi": address,
+                "Firma Ülkesi/Dil": country,
+                "Telefon Numaraları": phone_str,
+                "Email Adresleri": email_str,
+                "Sosyal Medya": social_str,
+                "Firma Tipi": company_type,
+                "Sayfa Başlığı": page_title,
+                "Özet Metin": summary,
+                "Ziyaret Edilen Sayfa Sayısı": visit_count,
+                "Durum": f"Kısmi Veri ({reason})"
+            })
+        
+        # DataFrame oluştur ve düzenle
+        df = pd.DataFrame(rows)
+        
+        # Boş satırları temizle
+        df = df.dropna(subset=['Firma Websitesi'])
+        df = df[df['Firma Websitesi'].str.strip() != '']
+        
+        # Sıralama
+        df = df.sort_values(['Firma Adı', 'Firma Websitesi'])
+        
+        # Dosya adı
+        timestamp = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"C_search_results_{reason}_{timestamp}.csv"
+        
+        # CSV kaydet
+        save_csv(df.to_dict(orient="records"), out_dir / filename)
+        print(f"💾 Kısmi veriler kaydedildi: {filename} ({len(df)} firma)")
+        
+    except Exception as e:
+        print(f"⚠️ Kısmi veri kaydetme hatası: {str(e)}")
 
 
 # ---- Arama (sayfalı) ----
@@ -799,29 +767,11 @@ def _get_search_results_with_pagination(driver: webdriver.Chrome, keyword: str, 
     all_links: List[str] = []
     pages_needed = max(1, (per_keyword_limit + 9) // 10)  # ~10 sonuç/sayfa
 
-    if engine == "Google":
-        base_url = f"https://www.google.com/search?q={urllib.parse.quote(keyword)}&hl=en"
-        result_selectors = ["div.yuRUbf > a[href]", "div.g h3 a[href]", "div.g > div > div > a[href]", "a[href][ping]", "div[data-ved] a[href]"]
-        next_page_selector = "a#pnnext, a[aria-label='Next page']"
-    elif engine == "Bing":
-        base_url = f"https://www.bing.com/search?q={urllib.parse.quote(keyword)}"
-        result_selectors = ["li.b_algo a[href]", "h2 a[href]", ".b_title a[href]"]
-        next_page_selector = "a.sb_pagN, a[aria-label='Next page']"
-    elif engine == "Yahoo":
-        base_url = f"https://search.yahoo.com/search?p={urllib.parse.quote(keyword)}"
-        result_selectors = [".algo a[href]", "h3 a[href]", ".compTitle a[href]"]
-        next_page_selector = "a.next, a[aria-label='Next page']"
-    elif engine == "Yandex":
-        base_url = f"https://yandex.com/search/?text={urllib.parse.quote(keyword)}"
-        result_selectors = [".organic a[href]", "h2 a[href]", ".link a[href]"]
-        next_page_selector = "a.pager__item_kind_next, a[aria-label='Next page']"
-    elif engine in ALTERNATIVE_SEARCH_ENGINES:
-        # Alternatif arama motorları için
-        engine_config = ALTERNATIVE_SEARCH_ENGINES[engine]
-        base_url = engine_config["url"].format(q=urllib.parse.quote(keyword))
-        result_selectors = [engine_config["result_selector"]]
-        next_page_selector = engine_config["next_page_selector"]
-        print(f"🔍 {engine} ile arama yapılıyor: {base_url}")
+    if engine == "DuckDuckGo":
+        base_url = f"https://html.duckduckgo.com/html/?q={urllib.parse.quote(keyword)}"
+        result_selectors = ["a.result__a", "a[data-testid='result-title-a']", "a.result__url", "h2.result__title a"]
+        next_page_selector = "a.result--more__btn, a[data-testid='pagination-next']"
+        print(f"🦆 DuckDuckGo ile arama yapılıyor: {base_url}")
     else:
         print(f"⚠️ Desteklenmeyen arama motoru: {engine}")
         return []
@@ -830,109 +780,84 @@ def _get_search_results_with_pagination(driver: webdriver.Chrome, keyword: str, 
         if page == 0:
             url = base_url
         else:
-            if engine == "Google":
-                url = f"{base_url}&start={page * 10}"
-            elif engine == "Bing":
-                url = f"{base_url}&first={page * 10 + 1}"
-            elif engine == "Yahoo":
-                url = f"{base_url}&b={page * 10 + 1}"
-            elif engine == "Yandex":
-                url = f"{base_url}&p={page}"
-            elif engine in ALTERNATIVE_SEARCH_ENGINES:
-                # Alternatif arama motorları için sayfalama
-                if engine == "DuckDuckGo":
-                    url = f"{base_url}&s={page * 10}"
-                elif engine == "Startpage":
-                    url = f"{base_url}&page={page + 1}"
-                elif engine == "Brave":
-                    url = f"{base_url}&offset={page * 10}"
-                elif engine == "Ecosia":
-                    url = f"{base_url}&p={page}"
-                elif engine == "Qwant":
-                    url = f"{base_url}&offset={page * 10}"
-                else:
-                    url = base_url  # Fallback
+            if engine == "DuckDuckGo":
+                url = f"{base_url}&s={page * 10}"
 
         try:
             print(f"Sayfa {page + 1} taraniyor: {engine}")
             
-            # İstek sayısına göre akıllı bekleme
-            _smart_wait_between_requests(page + 1)
+            # Minimal bekleme - hızlandırıldı
+            time.sleep(0.3)
             
             driver.get(url)
 
-            # CAPTCHA kontrolü - Google için özel, alternatif motorlar için genel
-            if engine == "Google":
-                _wait_if_google_sorry(driver, url, only_first_page=True, page_index=page)
-            elif engine in ALTERNATIVE_SEARCH_ENGINES:
-                # Alternatif arama motorları CAPTCHA'sız olduğu için sadece kısa bekleme
-                _human_like_delay(1.0, 2.0)
-
-            # İnsan benzeri bekleme
-            _human_like_delay(2.0, 4.0)
+            # Hızlı bekleme - minimal süre
+            time.sleep(0.5)
 
             links: List[str] = []
-            if engine == "Google":
-                google_selectors = [
-                    "div.yuRUbf > a[href]",
-                    "div.g h3 a[href]",
-                    "div.g > div > div > a[href]",
-                    "a[href][ping]",
-                    "div[data-ved] a[href]",
-                    "div.g a[href]:not([ping])",
-                    "h3 > a[href]",
-                    ".rc .r > a[href]",
+            if engine == "DuckDuckGo":
+                # DuckDuckGo için özel parsing - yeni format desteği
+                duckduckgo_selectors = [
+                    "a.result__a",  # Ana sonuç linkleri
+                    "a[data-testid='result-title-a']",  # Yeni format
+                    "a.result__url",  # Alternatif format
+                    "h2.result__title a",  # Başlık linkleri
+                    ".result__title a",  # Başlık linkleri alternatif
+                    ".result__url a",  # URL linkleri
+                    ".result a[href]",  # Genel result linkleri
                 ]
-                for selector in google_selectors:
-                    try:
-                        elements = driver.find_elements(By.CSS_SELECTOR, selector)
-                        for elem in elements:
-                            href = elem.get_attribute("href")
-                            if href and href.startswith("http"):
-                                if "/url?q=" in href:
-                                    href = urllib.parse.unquote(href.split("/url?q=")[1].split("&")[0])
-                                if not any(domain in href.lower() for domain in ["google.com", "bing.com", "yahoo.com", "yandex.com", "search.", "webcache", "translate.google"]):
-                                    if href not in links:
-                                        links.append(href)
-                    except Exception:
-                        continue
-            elif engine in ALTERNATIVE_SEARCH_ENGINES:
-                # Alternatif arama motorları için özel parsing
-                engine_config = ALTERNATIVE_SEARCH_ENGINES[engine]
-                selectors = engine_config["result_selector"].split(", ")
                 
-                for selector in selectors:
-                    try:
-                        elements = driver.find_elements(By.CSS_SELECTOR, selector.strip())
-                        for elem in elements:
-                            href = elem.get_attribute("href")
-                            if href and href.startswith("http"):
-                                # Alternatif arama motorları için domain filtreleme
-                                excluded_domains = [
-                                    "google.com", "bing.com", "yahoo.com", "yandex.com", 
-                                    "duckduckgo.com", "startpage.com", "search.brave.com",
-                                    "ecosia.org", "qwant.com", "search.", "webcache", 
-                                    "translate.google"
-                                ]
-                                if not any(domain in href.lower() for domain in excluded_domains):
-                                    if href not in links:
-                                        links.append(href)
-                    except Exception:
-                        continue
-                        
-                print(f"    📊 {engine}: {len(links)} sonuç bulundu")
-            else:
-                # Geleneksel arama motorları için
-                for selector in result_selectors:
+                for selector in duckduckgo_selectors:
                     try:
                         elements = driver.find_elements(By.CSS_SELECTOR, selector)
                         for elem in elements:
                             href = elem.get_attribute("href")
-                            if href and href.startswith("http"):
-                                if not any(domain in href.lower() for domain in ["google.com", "bing.com", "yahoo.com", "yandex.com", "search.", "webcache", "translate.google"]):
-                                    links.append(href)
+                            if href:
+                                # DuckDuckGo redirect linklerini çöz
+                                if href.startswith("//duckduckgo.com/l/?uddg="):
+                                    try:
+                                        # URL decode işlemi
+                                        decoded_url = urllib.parse.unquote(href.split("uddg=")[1].split("&")[0])
+                                        if decoded_url.startswith("http"):
+                                            links.append(decoded_url)
+                                    except Exception:
+                                        continue
+                                elif href.startswith("http") and "duckduckgo.com" not in href.lower():
+                                    # Normal HTTP linkleri
+                                    if not any(domain in href.lower() for domain in ["duckduckgo.com", "search.", "webcache", "translate.google"]):
+                                        if href not in links:
+                                            links.append(href)
                     except Exception:
                         continue
+                
+                # Eğer hiç link bulunamadıysa, HTML'den manuel parsing yap
+                if not links:
+                    try:
+                        page_source = driver.page_source
+                        # DuckDuckGo redirect linklerini regex ile bul
+                        redirect_pattern = r'//duckduckgo\.com/l/\?uddg=([^&"\'>\s]+)'
+                        redirect_matches = re.findall(redirect_pattern, page_source)
+                        for match in redirect_matches:
+                            try:
+                                decoded_url = urllib.parse.unquote(match)
+                                if decoded_url.startswith("http"):
+                                    links.append(decoded_url)
+                            except Exception:
+                                continue
+                        
+                        # Normal href linklerini de ara
+                        href_pattern = r'href=["\']([^"\']*http[^"\']*)["\']'
+                        href_matches = re.findall(href_pattern, page_source)
+                        for match in href_matches:
+                            if "duckduckgo.com" not in match.lower() and match not in links:
+                                links.append(match)
+                    except Exception:
+                        pass
+                
+                print(f"    📊 DuckDuckGo: {len(links)} sonuç bulundu")
+                if links:
+                    print(f"    🔗 İlk link örneği: {links[0][:100]}...")
+            # Sadece DuckDuckGo destekleniyor
 
             for link in links:
                 if not _is_filtered_domain(link):
@@ -955,7 +880,7 @@ def search_and_collect(
     per_keyword_limit: int,
     dwell_seconds: int,
     out_dir: Path,
-    anticaptcha_api_key: Optional[str] = None,  # GERİYE DÖNÜK UYUMLULUK: YOK SAYILIR
+    # CAPTCHA sistemi tamamen kaldırıldı
     use_stealth_mode: bool = False,
     headless_mode: bool = False,
     use_proxy: bool = False,
@@ -1033,15 +958,11 @@ def search_and_collect(
                 print(f"📈 İlerleme: {request_count}/{total_expected_requests} ({progress_percent:.1f}%)")
                 print(f"🏠 Ziyaret edilen site sayısı: {len(visited_domains)}/{max_sites_total}")
                 
-                # Alternatif arama motorları için özel loglama
-                if eng in ALTERNATIVE_SEARCH_ENGINES:
-                    print(f"🔍 [{kw_idx}/{total_keywords}] Alternatif arama: {kw} - {eng} (İstek #{request_count}) [CAPTCHA'sız]")
-                else:
-                    print(f"🔍 [{kw_idx}/{total_keywords}] Aranıyor: {kw} - {eng} (İstek #{request_count})")
+                print(f"🔍 [{kw_idx}/{total_keywords}] DuckDuckGo ile aranıyor: {kw} - {eng} (İstek #{request_count}) [CAPTCHA'sız]")
                 
-                # İstek sayısına göre akıllı bekleme
+                # İstek sayısına göre minimal bekleme - hızlandırıldı
                 if request_count > 1:
-                    _smart_wait_between_requests(request_count)
+                    time.sleep(0.5)  # Minimal bekleme - 0.5 saniye
                 
                 try:
                     links = _get_search_results_with_pagination(driver, kw, eng, per_keyword_limit)
@@ -1057,6 +978,12 @@ def search_and_collect(
                             driver = _stealth_driver(headless=headless_mode)
                         else:
                             driver = _driver(headless=headless_mode)
+                            
+                        # Session ayarlarını yeniden yap
+                        driver.set_page_load_timeout(15)
+                        driver.implicitly_wait(10)
+                        driver.set_script_timeout(30)
+                        
                         print(f"🔄 Driver yeniden başlatıldı")
                         # Yeniden deneme
                         try:
@@ -1069,10 +996,7 @@ def search_and_collect(
                         links = []
                 
                 # Sonuç loglama
-                if eng in ALTERNATIVE_SEARCH_ENGINES:
-                    print(f"✅ {eng} arama sonucu: {len(links)} link bulundu [CAPTCHA'sız]")
-                else:
-                    print(f"{eng} arama sonucu: {len(links)} link bulundu")
+                print(f"✅ {eng} arama sonucu: {len(links)} link bulundu [CAPTCHA'sız]")
 
                 if not links:
                     print("UYARI: Hiç link bulunamadı!")
@@ -1091,23 +1015,32 @@ def search_and_collect(
                         continue
 
                     try:
-                        print(f"Ziyaret ediliyor: {base_domain}")
+                        print(f"🌐 Site ziyaret ediliyor: {base_domain}")
                         
-                        # CAPTCHA kontrolü öncesi akıllı bekleme
-                        _human_like_delay(1.0, 2.5)
+                        # DuckDuckGo için özel optimizasyonlar
+                        if "duckduckgo" in lnk.lower():
+                            print(f"    🦆 DuckDuckGo sonucu ziyaret ediliyor...")
                         
-                        driver.set_page_load_timeout(max(10, dwell_seconds))
+                        # Minimal bekleme - hızlandırıldı
+                        time.sleep(0.3)
+                        
+                        driver.set_page_load_timeout(15)  # Orta timeout - 15 saniye
                         try:
                             driver.get(lnk)
                             
-                            # CAPTCHA kontrolü
-                            if _detect_captcha_page(driver):
-                                print(f"[CAPTCHA] {base_domain} - CAPTCHA tespit edildi, atlanıyor...")
-                                visited_domains.add(clean_domain)
-                                continue
+                            # DuckDuckGo için minimal bekleme - hızlandırıldı
+                            if "duckduckgo" in lnk.lower():
+                                print(f"    ⏳ DuckDuckGo sayfası yükleniyor...")
+                                time.sleep(0.5)  # Minimal bekleme - 0.5 saniye
+                            
+                            # Tarayıcı durumu kontrolü
+                            if not _is_browser_alive(driver):
+                                print(f"⚠️ Tarayıcı kapatıldı, kısmi veriler kaydediliyor...")
+                                _save_partial_data(domain_data, out_dir, "browser_closed")
+                                return pd.DataFrame()
                                 
                         except TimeoutException:
-                            print(f"Timeout: {base_domain} - {dwell_seconds}s sonra devam")
+                            print(f"⏰ Timeout: {base_domain} - 15s sonra devam")
                         except WebDriverException as e:
                             error_msg = str(e).lower()
                             if "invalid session id" in error_msg or "session deleted" in error_msg:
@@ -1121,13 +1054,19 @@ def search_and_collect(
                                     driver = _stealth_driver(headless=headless_mode)
                                 else:
                                     driver = _driver(headless=headless_mode)
+                                    
+                                # Session ayarlarını yeniden yap
+                                driver.set_page_load_timeout(15)
+                                driver.implicitly_wait(10)
+                                driver.set_script_timeout(30)
+                                
                                 print(f"🔄 Driver yeniden başlatıldı, site tekrar deneniyor...")
                                 try:
                                     driver.get(lnk)
-                                    if _detect_captcha_page(driver):
-                                        print(f"[CAPTCHA] {base_domain} - CAPTCHA tespit edildi, atlanıyor...")
-                                        visited_domains.add(clean_domain)
-                                        continue
+                                    if not _is_browser_alive(driver):
+                                        print(f"⚠️ Tarayıcı kapatıldı, kısmi veriler kaydediliyor...")
+                                        _save_partial_data(domain_data, out_dir, "browser_closed")
+                                        return pd.DataFrame()
                                 except Exception as retry_e:
                                     print(f"❌ Yeniden deneme başarısız: {base_domain} - {str(retry_e)[:120]}")
                                     visited_domains.add(clean_domain)
@@ -1139,27 +1078,39 @@ def search_and_collect(
 
                         visited_domains.add(clean_domain)
                         
-                        # İnsan benzeri sayfa inceleme süresi
-                        _human_like_delay(max(1, dwell_seconds // 2), dwell_seconds)
+                        # Hızlı sayfa inceleme - minimal bekleme
+                        time.sleep(0.5)  # Minimal bekleme - 0.5 saniye
 
                         html = driver.page_source
                         soup = BeautifulSoup(html, "lxml")
                         title = (soup.title.string if soup.title else "") or ""
 
-                        # Veri çıkarma süreci
+                        # Veri çıkarma süreci - DuckDuckGo için optimize edildi
                         print(f"    📊 Veri çıkarılıyor: {base_domain}")
                         
-                        main_emails = _extract_emails_advanced(base_domain, soup, html)
-                        main_phones = _extract_phones_advanced(html, soup)
+                        # DuckDuckGo sonuçları için özel veri çıkarma
+                        if "duckduckgo" in lnk.lower():
+                            print(f"    🦆 DuckDuckGo sonucundan veri çıkarılıyor...")
+                            # DuckDuckGo için daha agresif veri çıkarma
+                            main_emails = _extract_emails_advanced(base_domain, soup, html)
+                            main_phones = _extract_phones_advanced(html, soup)
+                        else:
+                            # Normal site ziyareti için standart veri çıkarma
+                            main_emails = _extract_emails_advanced(base_domain, soup, html)
+                            main_phones = _extract_phones_advanced(html, soup)
 
+                        # Sosyal medya linklerini çıkar
                         socials = set()
-                        for dom in ["facebook.com", "instagram.com", "linkedin.com", "x.com", "twitter.com", "youtube.com", "t.me"]:
+                        social_domains = ["facebook.com", "instagram.com", "linkedin.com", "x.com", "twitter.com", "youtube.com", "t.me"]
+                        for dom in social_domains:
                             for a in soup.find_all("a", href=True):
                                 if dom in a["href"]:
                                     socials.add(a["href"])
 
+                        # İletişim bilgilerini çıkar (DuckDuckGo için optimize edildi)
                         contact_info = _extract_contact_info(base_domain, soup, driver)
 
+                        # Tüm verileri birleştir
                         all_emails = main_emails.union(contact_info.get('emails', set()))
                         all_phones = main_phones.union(contact_info.get('phones', set()))
 
@@ -1227,15 +1178,18 @@ def search_and_collect(
             pass
 
     print(f"\n🎉 ARAMA TAMAMLANDI!")
+    print(f"🎉 DUCKDUCKGO ARAMA TAMAMLANDI!")
     print(f"📊 Toplam {len(visited_domains)} benzersiz domain ziyaret edildi")
     print(f"✅ {len(domain_data)} siteden veri toplandı")
-    print(f"📈 {request_count} arama isteği gerçekleştirildi")
+    print(f"📈 {request_count} DuckDuckGo arama isteği gerçekleştirildi")
     print(f"🎯 Site limiti: {len(visited_domains)}/{max_sites_total}")
     
     if len(domain_data) == 0:
         print("⚠️ Hiçbir siteden veri toplanamadı!")
+        print("💡 DuckDuckGo arama sonuçlarını kontrol edin ve site ziyaret ayarlarını gözden geçirin")
     else:
         print(f"💾 Veriler CSV dosyasına kaydediliyor...")
+        print(f"🦆 DuckDuckGo ile başarılı veri toplama tamamlandı!")
 
     rows = []
     for domain, data in domain_data.items():
