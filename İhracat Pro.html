@@ -1,0 +1,3150 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>İhracat Pro | İhracat Pazarlama Otomasyonu</title>
+  <meta name="description" content="İhracat Pro ile potansiyel müşteri bulun, yapay zeka destekli içerik üretin, otomatik e-posta kampanyaları oluşturun ve ihracat pazarlamanızı tek panelden yönetin.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue: #0866ff;
+      --blue-2: #0b7cff;
+      --blue-dark: #063bb8;
+      --navy: #071a3d;
+      --navy-2: #0c2554;
+      --navy-3: #102f68;
+      --text: #0a1b3f;
+      --muted: #64748b;
+      --soft: #f3f7ff;
+      --soft-2: #eef4ff;
+      --line: #dce7fb;
+      --white: #ffffff;
+      --green: #16b978;
+      --orange: #ffb020;
+      --red: #ff4158;
+      --shadow: 0 24px 70px rgba(8, 102, 255, .12);
+      --shadow-soft: 0 18px 55px rgba(7, 26, 61, .08);
+      --container: min(1600px, calc(100% - 64px));
+      --radius: 28px;
+      --radius-lg: 34px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: #f5f8ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f8ff;
+      color: var(--text);
+      overflow-x: hidden;
+      text-rendering: geometricPrecision;
+    }
+
+    body.is-lightbox-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 8% 3%, rgba(8, 102, 255, .10), transparent 30%),
+        radial-gradient(circle at 92% 10%, rgba(8, 102, 255, .10), transparent 32%),
+        #f5f8ff;
+    }
+
+    .container {
+      width: var(--container);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topbar {
+      width: var(--container);
+      margin: 22px auto 0;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 0 18px 0 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid rgba(220, 231, 251, .9);
+      box-shadow: 0 18px 50px rgba(7, 26, 61, .07);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 18px;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 14px 35px rgba(8, 102, 255, .28);
+      font-weight: 900;
+      letter-spacing: -.06em;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+
+    .brand span span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #51617a;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav a {
+      padding: 10px 13px;
+      border-radius: 999px;
+      transition: .25s var(--ease);
+    }
+
+    .nav a:hover {
+      color: var(--blue);
+      background: #eef4ff;
+    }
+
+    .btn {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 20px;
+      border-radius: 13px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      transition: .25s var(--ease);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(8, 102, 255, .28);
+    }
+
+    .btn-outline {
+      color: var(--blue);
+      background: #fff;
+      border-color: #bfd3ff;
+    }
+
+    .btn-dark-outline {
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .hero {
+      padding: 42px 0 58px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(520px, .72fr);
+      gap: 40px;
+      align-items: center;
+      padding: 72px;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 72% 18%, rgba(255,255,255,.25), transparent 25%),
+        linear-gradient(135deg, #075ff0 0%, #0346c8 48%, #06329b 100%);
+      color: #fff;
+      box-shadow: 0 34px 90px rgba(8, 102, 255, .22);
+    }
+
+    .hero-card:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .22;
+      background-image:
+        linear-gradient(rgba(255,255,255,.20) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.20) 1px, transparent 1px);
+      background-size: 58px 58px;
+      mask-image: radial-gradient(circle at 72% 42%, black 0%, transparent 68%);
+    }
+
+    .hero-card:after {
+      content: "";
+      position: absolute;
+      right: -150px;
+      bottom: -180px;
+      width: 620px;
+      height: 360px;
+      background: url("https://alacati.demoland.website/wp-content/uploads/2026/04/lines2.png") center / contain no-repeat;
+      opacity: .32;
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #dce9ff;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.light {
+      color: var(--blue);
+      background: #eef4ff;
+      border-color: #dce7fb;
+    }
+
+    .eyebrow i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 6px rgba(255,255,255,.14);
+    }
+
+    .eyebrow.light i {
+      background: var(--blue);
+      box-shadow: 0 0 0 6px rgba(8,102,255,.12);
+    }
+
+    .hero h1 {
+      margin: 24px 0 0;
+      max-width: 760px;
+      font-size: clamp(48px, 5.4vw, 86px);
+      line-height: 1.02;
+      letter-spacing: -.065em;
+    }
+
+    .hero h1 span {
+      color: #bfdbff;
+    }
+
+    .hero p {
+      margin: 24px 0 0;
+      max-width: 650px;
+      color: rgba(255,255,255,.82);
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin-top: 26px;
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hero-trust span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-trust b {
+      width: 19px;
+      height: 19px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      min-height: 470px;
+    }
+
+    .world-map {
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      overflow: hidden;
+    }
+
+    .world-map svg {
+      width: 100%;
+      height: 100%;
+      opacity: .72;
+    }
+
+    .route-line {
+      fill: none;
+      stroke: rgba(255,255,255,.60);
+      stroke-width: 2;
+      stroke-dasharray: 8 10;
+      animation: dashMove 9s linear infinite;
+    }
+
+    @keyframes dashMove {
+      to { stroke-dashoffset: -220; }
+    }
+
+    .map-dot {
+      fill: #fff;
+      filter: drop-shadow(0 0 9px rgba(255,255,255,.9));
+    }
+
+    .hero-feature-stack {
+      position: absolute;
+      right: 0;
+      top: 44px;
+      width: 350px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-feature {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 14px;
+      align-items: center;
+      min-height: 98px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 45px rgba(0,0,0,.12);
+    }
+
+    .hero-feature-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      background: rgba(255,255,255,.14);
+      color: #fff;
+    }
+
+    .hero-feature-icon svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .hero-feature strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.035em;
+    }
+
+    .hero-feature span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(255,255,255,.74);
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .section {
+      padding: 92px 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(360px, .54fr);
+      gap: 50px;
+      align-items: end;
+      margin-bottom: 46px;
+    }
+
+    .section-title {
+      margin: 18px 0 0;
+      max-width: 930px;
+      font-size: clamp(38px, 4.4vw, 68px);
+      line-height: 1.06;
+      letter-spacing: -.06em;
+      color: var(--text);
+    }
+
+    .section-title span {
+      color: var(--blue);
+    }
+
+    .section-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .sleep-section {
+      padding: 22px 0 88px;
+    }
+
+    .sleep-layout {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .72fr) minmax(620px, .92fr);
+      gap: 28px;
+      align-items: stretch;
+      padding: 44px;
+      border-radius: 34px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .sleep-layout:before {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -70px;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: rgba(8,102,255,.08);
+    }
+
+    .sleep-copy {
+      position: relative;
+      z-index: 2;
+      padding: 18px 4px 18px 8px;
+    }
+
+    .sleep-copy h2 {
+      margin: 20px 0 0;
+      max-width: 650px;
+      color: var(--text);
+      font-size: clamp(38px, 4.3vw, 66px);
+      line-height: 1.06;
+      letter-spacing: -.065em;
+    }
+
+    .sleep-copy h2 span {
+      color: var(--blue);
+    }
+
+    .sleep-copy p {
+      margin: 20px 0 0;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 500;
+    }
+
+    .sleep-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .sleep-point {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 15px;
+      border-radius: 18px;
+      background: #f6f9ff;
+      border: 1px solid #e5edff;
+      cursor: pointer;
+      transition: .25s var(--ease);
+    }
+
+    .sleep-point:hover,
+    .sleep-point.active {
+      background: #eef4ff;
+      border-color: #bfd3ff;
+      transform: translateY(-2px);
+    }
+
+    .sleep-point b {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--blue);
+      box-shadow: 0 10px 24px rgba(8,102,255,.10);
+      font-size: 13px;
+    }
+
+    .sleep-point strong {
+      display: block;
+      color: var(--text);
+      font-size: 15px;
+      letter-spacing: -.025em;
+    }
+
+    .sleep-point span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .sleep-showcase {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 16px;
+      min-height: 640px;
+    }
+
+    .sleep-main-shot {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 25% 5%, rgba(8,102,255,.12), transparent 32%),
+        #f8fbff;
+      border: 1px solid var(--line);
+      box-shadow: 0 22px 60px rgba(7,26,61,.08);
+      display: grid;
+      place-items: center;
+      padding: 26px;
+      cursor: zoom-in;
+    }
+
+    .sleep-main-shot img {
+      width: 100%;
+      max-height: 510px;
+      object-fit: contain;
+      border-radius: 20px;
+      filter: drop-shadow(0 24px 45px rgba(7,26,61,.12));
+      transition: .35s var(--ease);
+    }
+
+    .sleep-main-shot:hover img {
+      transform: scale(1.025);
+    }
+
+    .sleep-shot-label {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      color: var(--blue);
+      border: 1px solid #dce7fb;
+      font-size: 12px;
+      font-weight: 850;
+      box-shadow: 0 14px 30px rgba(7,26,61,.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .sleep-shot-label i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(22,185,120,.12);
+    }
+
+    .sleep-thumbs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+
+    .sleep-thumb {
+      height: 86px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: .25s var(--ease);
+      overflow: hidden;
+    }
+
+    .sleep-thumb:hover,
+    .sleep-thumb.active {
+      border-color: var(--blue);
+      box-shadow: 0 12px 30px rgba(8,102,255,.14);
+      transform: translateY(-2px);
+    }
+
+    .sleep-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .stats-section {
+      padding: 42px 0 78px;
+    }
+
+    .stats-card {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(540px, .78fr);
+      gap: 46px;
+      align-items: center;
+      padding: 64px;
+      border-radius: 30px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .stats-card:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      width: 260px;
+      height: 420px;
+      transform: translateY(-50%);
+      opacity: .28;
+      background-image: radial-gradient(var(--blue) 1.6px, transparent 1.6px);
+      background-size: 15px 15px;
+    }
+
+    .stats-copy h2 {
+      margin: 18px 0 0;
+      max-width: 640px;
+      color: var(--text);
+      font-size: clamp(42px, 4.8vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -.07em;
+    }
+
+    .stats-copy h2 span {
+      color: var(--blue);
+    }
+
+    .stats-copy p {
+      max-width: 600px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .stats-actions {
+      display: flex;
+      gap: 13px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-box {
+      min-height: 164px;
+      padding: 24px;
+      border-radius: 21px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 44px rgba(7,26,61,.06);
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: #eef4ff;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    .stat-box strong {
+      display: block;
+      color: var(--text);
+      font-size: 31px;
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .stat-box span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .stat-wide {
+      grid-column: span 2;
+      min-height: 120px;
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      min-height: 150px;
+      padding: 24px 20px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card .stat-icon {
+      margin-bottom: 18px;
+    }
+
+    .feature-card strong {
+      display: block;
+      font-size: 16px;
+      letter-spacing: -.03em;
+      color: var(--text);
+    }
+
+    .feature-card span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 600;
+    }
+
+    .dark-band {
+      padding: 92px 0;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(8,102,255,.28), transparent 34%),
+        linear-gradient(135deg, #061329 0%, #081d43 100%);
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dark-band:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .17;
+      background-image:
+        linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    .dark-band:after {
+      content: "";
+      position: absolute;
+      left: -120px;
+      bottom: -180px;
+      width: 760px;
+      height: 420px;
+      background: url("https://alacati.demoland.website/wp-content/uploads/2026/04/lines.webp") center / contain no-repeat;
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    .dark-layout {
+      display: grid;
+      grid-template-columns: .72fr 1fr .72fr;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mini-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .mini-card {
+      min-height: 142px;
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.14);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 16px;
+      letter-spacing: -.03em;
+    }
+
+    .mini-card ul {
+      padding: 0;
+      margin: 14px 0 0;
+      list-style: none;
+      display: grid;
+      gap: 9px;
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .mini-card li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mini-card li:before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blue-2);
+      box-shadow: 0 0 15px rgba(8,124,255,.8);
+    }
+
+    .dark-center {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .dark-center .eyebrow {
+      background: rgba(255,255,255,.10);
+    }
+
+    .dark-center h2 {
+      max-width: 780px;
+      margin: 22px auto 0;
+      font-size: clamp(38px, 4.4vw, 68px);
+      line-height: 1.08;
+      letter-spacing: -.06em;
+    }
+
+    .dark-center p {
+      max-width: 650px;
+      margin: 22px auto 0;
+      color: rgba(255,255,255,.70);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    .dark-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .orbit {
+      position: relative;
+      width: min(560px, 90%);
+      aspect-ratio: 1 / .32;
+      margin: 48px auto 0;
+      border-top: 1px solid rgba(255,255,255,.26);
+      border-radius: 50% 50% 0 0;
+    }
+
+    .orbit-icon {
+      position: absolute;
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 18px 50px rgba(8,102,255,.38);
+      color: #fff;
+    }
+
+    .orbit-icon:nth-child(1) { left: 10%; bottom: -34px; }
+    .orbit-icon:nth-child(2) { left: 50%; bottom: 10px; transform: translateX(-50%); }
+    .orbit-icon:nth-child(3) { right: 10%; bottom: -34px; }
+
+    .dashboard-section {
+      padding: 100px 0;
+    }
+
+    .dashboard-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(440px, .70fr);
+      gap: 56px;
+      align-items: center;
+      padding: 46px;
+      border-radius: 30px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .dashboard-mock {
+      overflow: hidden;
+      border-radius: 25px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      box-shadow: 0 22px 60px rgba(7,26,61,.08);
+      cursor: zoom-in;
+    }
+
+    .dashboard-mock img {
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .dashboard-copy .section-title {
+      margin-top: 16px;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 14px;
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .check-list b {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .dashboard-actions {
+      display: flex;
+      gap: 13px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .metrics-row strong {
+      display: block;
+      color: var(--blue);
+      font-size: 22px;
+      letter-spacing: -.04em;
+      margin-bottom: 5px;
+    }
+
+    .gallery-section {
+      padding: 12px 0 100px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      min-height: 250px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      cursor: zoom-in;
+      transition: .25s var(--ease);
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 70px rgba(8,102,255,.14);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 230px;
+      object-fit: contain;
+      padding: 16px;
+      background: #fbfdff;
+    }
+
+    .gallery-item figcaption {
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--line);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .gallery-item figcaption span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .pricing-section {
+      padding: 20px 0 100px;
+    }
+
+    .pricing-card {
+      display: grid;
+      grid-template-columns: .78fr 1.1fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .price-main {
+      padding: 42px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: #fff;
+      box-shadow: 0 26px 80px rgba(7,26,61,.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-main:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(8,102,255,.32);
+      filter: blur(20px);
+    }
+
+    .price-main h3 {
+      margin: 18px 0 0;
+      font-size: 38px;
+      line-height: 1.05;
+      letter-spacing: -.06em;
+      position: relative;
+      z-index: 2;
+    }
+
+    .price {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .price strong {
+      font-size: 78px;
+      line-height: .85;
+      letter-spacing: -.08em;
+    }
+
+    .price span {
+      color: rgba(255,255,255,.64);
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .price-main p {
+      max-width: 440px;
+      margin: 24px 0 0;
+      color: rgba(255,255,255,.66);
+      line-height: 1.7;
+      position: relative;
+      z-index: 2;
+    }
+
+    .price-main .btn {
+      margin-top: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .credit-table {
+      padding: 14px;
+      border-radius: 30px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .credit-row {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 17px;
+      border-radius: 18px;
+    }
+
+    .credit-row:nth-child(even) {
+      background: #f3f7ff;
+    }
+
+    .credit-row b {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #eef4ff;
+      color: var(--blue);
+      font-size: 13px;
+    }
+
+    .credit-row strong {
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+
+    .credit-row span {
+      justify-self: end;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .faq-section {
+      padding: 0 0 100px;
+    }
+
+    .faq-layout {
+      display: grid;
+      grid-template-columns: .7fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .faq-intro {
+      position: sticky;
+      top: 110px;
+      padding: 34px;
+      border-radius: 30px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .faq-intro h2 {
+      margin: 18px 0 0;
+      font-size: clamp(34px, 3.8vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -.06em;
+    }
+
+    .faq-intro p {
+      margin: 18px 0 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .accordion {
+      display: grid;
+      gap: 12px;
+    }
+
+    .acc-item {
+      overflow: hidden;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 44px rgba(7,26,61,.055);
+    }
+
+    .acc-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 21px 22px;
+      text-align: left;
+      color: var(--text);
+      font-weight: 850;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      cursor: pointer;
+      letter-spacing: -.02em;
+    }
+
+    .acc-btn i {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #eef4ff;
+      color: var(--blue);
+      font-style: normal;
+      flex: 0 0 auto;
+      transition: .25s var(--ease);
+    }
+
+    .acc-item.active .acc-btn i {
+      transform: rotate(45deg);
+    }
+
+    .acc-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .28s var(--ease);
+    }
+
+    .acc-item.active .acc-content {
+      grid-template-rows: 1fr;
+    }
+
+    .acc-inner {
+      overflow: hidden;
+    }
+
+    .acc-inner p {
+      margin: 0;
+      padding: 0 22px 22px;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .final {
+      padding: 96px 0 110px;
+    }
+
+    .final-card {
+      text-align: center;
+      padding: 76px 40px;
+      border-radius: 34px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.22), transparent 38%),
+        linear-gradient(135deg, var(--blue), #0537a9);
+      box-shadow: 0 34px 90px rgba(8, 102, 255, .22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-card:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.22) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .final-card:after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -130px;
+      width: 520px;
+      height: 300px;
+      background: url("https://alacati.demoland.website/wp-content/uploads/2026/04/lines2.png") center / contain no-repeat;
+      opacity: .34;
+    }
+
+    .final-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .final-card h2 {
+      max-width: 850px;
+      margin: 18px auto 0;
+      font-size: clamp(42px, 4.8vw, 76px);
+      line-height: 1.04;
+      letter-spacing: -.065em;
+    }
+
+    .final-card p {
+      max-width: 680px;
+      margin: 22px auto 0;
+      color: rgba(255,255,255,.78);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    .final-actions {
+      margin-top: 34px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 34px;
+      background: rgba(7, 26, 61, .78);
+      backdrop-filter: blur(14px);
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      width: min(1180px, 100%);
+      max-height: 92vh;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 34px 120px rgba(0,0,0,.35);
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .lightbox-head {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 18px 0 22px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .lightbox-close {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 12px;
+      background: #eef4ff;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .lightbox-body {
+      padding: 18px;
+      overflow: auto;
+      background: #f8fbff;
+    }
+
+    .lightbox-body img {
+      width: 100%;
+      height: auto;
+      max-height: 76vh;
+      object-fit: contain;
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    
+    .ip-scroll-story {
+  position: relative;
+  z-index: 4;
+  background: #f5f8ff;
+}
+
+.ip-story-pin {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 86px 0;
+  overflow: hidden;
+}
+
+.ip-story-wrap {
+  min-height: min(820px, calc(100vh - 90px));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 22px;
+}
+
+.ip-story-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 30px;
+  align-items: end;
+}
+
+.ip-story-top h2 {
+  margin: 18px 0 0;
+  max-width: 900px;
+  color: var(--text);
+  font-size: clamp(40px, 4.5vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -.065em;
+}
+
+.ip-story-top h2 span {
+  color: var(--blue);
+}
+
+.ip-story-top p {
+  margin: 18px 0 0;
+  max-width: 720px;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ip-story-status,
+.ip-story-small-status {
+  min-width: 148px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+.ip-story-status strong,
+.ip-story-small-status strong {
+  display: block;
+  color: var(--text);
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -.06em;
+}
+
+.ip-story-status span,
+.ip-story-small-status span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.ip-story-stage {
+  --story-active: #0866ff;
+  position: relative;
+  min-height: 570px;
+}
+
+.ip-story-stage:before,
+.ip-story-stage:after {
+  content: "";
+  position: absolute;
+  left: 46px;
+  right: 46px;
+  bottom: -34px;
+  height: 120px;
+  border-radius: 34px;
+  background: var(--story-active);
+  opacity: .22;
+  filter: blur(12px);
+  transform: scale(.96);
+  transition: background .35s var(--ease);
+}
+
+.ip-story-stage:after {
+  left: 88px;
+  right: 88px;
+  bottom: -68px;
+  opacity: .12;
+  filter: blur(16px);
+  transform: scale(.92);
+}
+
+.ip-story-card {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(420px, .78fr);
+  gap: 42px;
+  align-items: center;
+  padding: 44px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.18), transparent 32%),
+    linear-gradient(135deg, var(--card-color, #0866ff), color-mix(in srgb, var(--card-color, #0866ff) 78%, #061329 22%));
+  box-shadow: 0 34px 90px rgba(8, 102, 255, .18);
+  opacity: 0;
+  transform: translateY(54px) scale(.965);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ip-story-card:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.24) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.24) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(circle at 28% 45%, black 0%, transparent 68%);
+}
+
+.ip-story-card.is-active {
+  z-index: 5;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.ip-story-shot {
+  position: relative;
+  z-index: 2;
+  min-height: 460px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(7, 26, 61, .16);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.ip-story-shot img {
+  width: 100%;
+  max-height: 430px;
+  object-fit: contain;
+  border-radius: 18px;
+  transition: transform .35s var(--ease);
+}
+
+.ip-story-shot:hover img {
+  transform: scale(1.025);
+}
+
+.ip-story-shot button {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--card-color, #0866ff);
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgba(7, 26, 61, .16);
+}
+
+.ip-story-copy {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+
+.ip-story-copy > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.20);
+  color: rgba(255,255,255,.86);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ip-story-copy h3 {
+  margin: 0;
+  max-width: 620px;
+  font-size: clamp(34px, 3.6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -.065em;
+}
+
+.ip-story-copy p {
+  margin: 20px 0 0;
+  max-width: 610px;
+  color: rgba(255,255,255,.84);
+  font-size: 18px;
+  line-height: 1.65;
+  font-weight: 600;
+}
+
+.ip-story-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  position: relative;
+  z-index: 8;
+}
+
+.ip-story-small-status {
+  padding: 16px 18px;
+}
+
+.ip-story-back {
+  min-height: 54px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 18px;
+  color: var(--text);
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  font-weight: 850;
+  cursor: pointer;
+  transition: .25s var(--ease);
+}
+
+.ip-story-back:hover {
+  transform: translateY(-2px);
+  color: var(--blue);
+}
+
+@media (max-width: 1280px) {
+  .ip-story-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px;
+  }
+
+  .ip-story-stage {
+    min-height: 820px;
+  }
+
+  .ip-story-shot {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 980px) {
+  .ip-story-pin {
+    min-height: auto;
+    padding: 60px 0;
+  }
+
+  .ip-story-wrap {
+    min-height: auto;
+  }
+
+  .ip-story-top {
+    grid-template-columns: 1fr;
+  }
+
+  .ip-story-stage {
+    min-height: auto;
+    display: grid;
+    gap: 18px;
+  }
+
+  .ip-story-stage:before,
+  .ip-story-stage:after {
+    display: none;
+  }
+
+  .ip-story-card {
+    position: relative;
+    inset: auto;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto;
+  }
+
+  .ip-story-shot {
+    min-height: auto;
+  }
+
+  .ip-story-shot img {
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ip-story-card {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .ip-story-shot {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .ip-story-bottom {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ip-story-back {
+    width: 100%;
+  }
+}
+
+    @media (max-width: 1280px) {
+      :root {
+        --container: min(1180px, calc(100% - 44px));
+      }
+
+      .hero-card,
+      .sleep-layout,
+      .stats-card,
+      .dashboard-wrap,
+      .pricing-card,
+      .dark-layout,
+      .faq-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 450px;
+      }
+
+      .hero-feature-stack {
+        right: auto;
+        left: 0;
+      }
+
+      .feature-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .faq-intro {
+        position: relative;
+        top: auto;
+      }
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --container: min(100% - 28px, 1600px);
+      }
+
+      .topbar {
+        width: calc(100% - 24px);
+        top: 12px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .hero-card,
+      .sleep-layout,
+      .stats-card,
+      .dashboard-wrap {
+        padding: 30px;
+      }
+
+      .hero-card {
+        min-height: auto;
+      }
+
+      .hero h1,
+      .sleep-copy h2,
+      .stats-copy h2,
+      .section-title,
+      .final-card h2 {
+        font-size: clamp(38px, 11vw, 62px);
+      }
+
+      .hero-feature-stack {
+        position: relative;
+        width: 100%;
+        top: auto;
+        margin-top: 24px;
+      }
+
+      .world-map {
+        display: none;
+      }
+
+      .hero-visual {
+        min-height: auto;
+      }
+
+      .hero-note,
+      .stats-grid,
+      .feature-row,
+      .metrics-row,
+      .sleep-thumbs,
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sleep-thumb {
+        height: 140px;
+      }
+
+      .stat-wide {
+        grid-column: auto;
+      }
+
+      .section-head {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .credit-row {
+        grid-template-columns: 42px 1fr;
+      }
+
+      .credit-row span {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar .btn {
+        display: none;
+      }
+
+      .hero,
+      .section,
+      .dashboard-section,
+      .final {
+        padding-block: 58px;
+      }
+
+      .hero-actions,
+      .stats-actions,
+      .dashboard-actions,
+      .final-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .price strong {
+        font-size: 62px;
+      }
+
+      .hero-card,
+      .sleep-layout,
+      .stats-card,
+      .dashboard-wrap,
+      .price-main,
+      .final-card {
+        border-radius: 24px;
+      }
+
+      .lightbox {
+        padding: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *:before,
+      *:after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <nav class="topbar">
+      <a href="#home" class="brand">
+        <span class="brand-icon">IP</span>
+        <span>
+          <strong>İhracat Pro</strong>
+          <span>Export Marketing Automation</span>
+        </span>
+      </a>
+
+      <div class="nav">
+        <a href="#sleep">7/24 Sistem</a>
+        <a href="#features">Özellikler</a>
+        <a href="#automation">Otomasyon</a>
+        <a href="#dashboard">Panel</a>
+        <a href="#pricing">Kredi</a>
+      </div>
+
+      <a href="#final" class="btn btn-primary">Hemen Başla</a>
+    </nav>
+
+    <header class="hero" id="home">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow reveal"><i></i> İhracat Pazarlama Otomasyonu</div>
+
+            <h1 class="reveal">
+              İhracat Pazarlamanızı <span>24 Saat Otomatikleştirin</span>
+            </h1>
+
+            <p class="reveal">
+              Yapay zeka destekli içerik üretimi, otomatik e-posta kampanyaları ve akıllı segmentasyon ile potansiyel müşterilerinize doğru mesajla, doğru zamanda ulaşın.
+            </p>
+
+            <div class="hero-actions reveal">
+              <a href="#final" class="btn btn-light">Hemen Başla →</a>
+              <a href="#dashboard" class="btn btn-dark-outline">Demo Talep Et</a>
+            </div>
+
+            <div class="hero-trust reveal">
+              <span><b>✓</b> KVKK uyumlu</span>
+              <span><b>✓</b> 256-bit SSL ile güvenli</span>
+              <span><b>✓</b> SMTP / IMAP destekli</span>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal">
+            <div class="world-map">
+              <svg viewBox="0 0 720 480" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.5" fill="rgba(255,255,255,.42)" />
+                  </pattern>
+                </defs>
+                <path d="M75 155 C125 110 188 96 250 128 C309 160 352 125 412 104 C490 76 567 94 636 135" fill="none" stroke="url(#dots)" stroke-width="120" stroke-linecap="round" opacity=".65"/>
+                <path d="M96 290 C180 230 238 272 322 250 C420 224 508 248 615 302" fill="none" stroke="url(#dots)" stroke-width="110" stroke-linecap="round" opacity=".52"/>
+                <path class="route-line" d="M118 270 C250 90, 410 118, 610 210"></path>
+                <path class="route-line" d="M160 148 C278 268, 430 250, 650 112" opacity=".6"></path>
+                <circle class="map-dot" cx="118" cy="270" r="5"/>
+                <circle class="map-dot" cx="306" cy="132" r="5"/>
+                <circle class="map-dot" cx="466" cy="164" r="5"/>
+                <circle class="map-dot" cx="610" cy="210" r="5"/>
+                <circle class="map-dot" cx="650" cy="112" r="5"/>
+              </svg>
+            </div>
+
+            <div class="hero-feature-stack">
+              <div class="hero-feature">
+                <div class="hero-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+                </div>
+                <div>
+                  <strong>195+ Ülke</strong>
+                  <span>Küresel pazarlara ulaşın</span>
+                </div>
+              </div>
+
+              <div class="hero-feature">
+                <div class="hero-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.7 5.2L19 10l-5.3 1.8L12 17l-1.7-5.2L5 10l5.3-1.8L12 3z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z"/></svg>
+                </div>
+                <div>
+                  <strong>AI Destekli İçerik</strong>
+                  <span>Akıllı içerik üretimi</span>
+                </div>
+              </div>
+
+              <div class="hero-feature">
+                <div class="hero-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                </div>
+                <div>
+                  <strong>Otomatik E-posta</strong>
+                  <span>Kişiselleştirilmiş kampanyalar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="ip-scroll-story" id="sleep">
+  <div class="ip-story-pin">
+    <div class="container ip-story-wrap">
+
+      <div class="ip-story-top">
+        <div>
+          <div class="eyebrow light reveal"><i></i> Siz Uyurken Bile Çalışır</div>
+          <h2>Siz Uyurken Bile Sizin İçin <span>Çalışan İhracatçınız</span></h2>
+          <p>
+            İhracat Pro sizin adınıza veri toplar, firmaları analiz eder, potansiyel müşterileri bulur,
+            kişiselleştirilmiş e-postalar hazırlar ve süreci 7/24 otomatik yönetir.
+          </p>
+        </div>
+
+        <div class="ip-story-status">
+          <strong id="ipStoryCounter">01 / 13</strong>
+          <span id="ipStoryLabel">Panel</span>
+        </div>
+      </div>
+
+      <div class="ip-story-stage" id="ipStoryStage">
+
+        <article class="ip-story-card is-active" data-label="Panel" data-color="#0866ff">
+          <div class="ip-story-shot js-lightbox" data-title="Ana Panel" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/panel.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/panel.webp" alt="İhracat Pro ana panel">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>01 / 13</span>
+            <h3>Tüm ihracat sürecine tek ekrandan ulaşın</h3>
+            <p>Firma analizi, müşteri keşfi, e-posta kampanyaları, raporlar ve kredi yönetimi tek panelden kontrol edilir.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Firma Analizi" data-color="#0b7cff">
+          <div class="ip-story-shot js-lightbox" data-title="Firma Analizi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp" alt="Firma analizi ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>02 / 13</span>
+            <h3>Firmanızı otomatik analiz edin</h3>
+            <p>Web siteniz, sektörünüz, ürünleriniz ve firma bilgileriniz analiz edilerek ideal müşteri profili çıkarılır.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Data Çıkarma" data-color="#e83f4f">
+          <div class="ip-story-shot js-lightbox" data-title="Manuel Data Çıkarma" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/manuel-data-cikarma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/manuel-data-cikarma.webp" alt="Manuel data çıkarma ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>03 / 13</span>
+            <h3>Sadece data çıkarın</h3>
+            <p>Ülke ve sektör seçin, İhracat Pro sizin için potansiyel müşteri datasını anında oluştursun.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Hedef Ülkeler" data-color="#0866ff">
+          <div class="ip-story-shot js-lightbox" data-title="Hedef Ülke Seçimi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/ulke-sec.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/ulke-sec.webp" alt="Hedef ülke seçimi ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>04 / 13</span>
+            <h3>Hedef ülkelerinizi seçin</h3>
+            <p>Müşteri bulmak istediğiniz ülkeleri seçin, sistem o pazarlarda en doğru firmaları aramaya başlasın.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Potansiyeller" data-color="#0f58d8">
+          <div class="ip-story-shot js-lightbox" data-title="Potansiyel Müşteriler" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/potansiyel-musteri.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/potansiyel-musteri.webp" alt="Potansiyel müşteri listesi">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>05 / 13</span>
+            <h3>Potansiyel müşterileri bulun</h3>
+            <p>Firma adı, web sitesi, e-posta, iletişim bilgileri ve uygunluk sinyalleri tek listede toplanır.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="AI İçerik" data-color="#6d5dfc">
+          <div class="ip-story-shot js-lightbox" data-title="AI Mail İçerik Üretimi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-icerik-uretimi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-icerik-uretimi.webp" alt="Mail içerik üretimi ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>06 / 13</span>
+            <h3>Her firmaya özel e-posta üretin</h3>
+            <p>Sistem, alıcı firmanın web sitesini ve faaliyet alanını analiz ederek kişiselleştirilmiş e-posta içeriği hazırlar.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Otomatik Gönderim" data-color="#14b87a">
+          <div class="ip-story-shot js-lightbox" data-title="Otomatik E-posta Gönderimi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-gonderimi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-gonderimi.webp" alt="Otomatik mail gönderimi ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>07 / 13</span>
+            <h3>Keşiften gönderime tam otomasyon</h3>
+            <p>Potansiyel müşteri keşfi, içerik üretimi ve e-posta gönderimi aynı akışta otomatik ilerler.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="7/24 Sistem" data-color="#0aa36f">
+          <div class="ip-story-shot js-lightbox" data-title="7/24 Kesintisiz Çalışma" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp" alt="7/24 kesintisiz çalışma ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>08 / 13</span>
+            <h3>Siz uyurken sistem çalışmaya devam eder</h3>
+            <p>İhracat Pro yeni firmaları bulur, içerikleri hazırlar, gönderim sürecini yürütür ve sonuçları raporlar.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Tam Otomasyon" data-color="#0b63f6">
+          <div class="ip-story-shot js-lightbox" data-title="Tam Otomasyon Data Çıkarma" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/tam-otomasyon-data-cikarma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/tam-otomasyon-data-cikarma.webp" alt="Tam otomasyon data çıkarma ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>09 / 13</span>
+            <h3>Otomatik müşteri bul ve iletişime geç</h3>
+            <p>Hedef ülke ve sektöre göre potansiyeller bulunur, içerikler hazırlanır ve gönderim kuyruğu oluşturulur.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Laptop Panel" data-color="#082d75">
+          <div class="ip-story-shot js-lightbox" data-title="Laptop Panel Görünümü" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp" alt="Laptop panel görünümü">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>10 / 13</span>
+            <h3>Kampanyalarınızı tek ekrandan yönetin</h3>
+            <p>Tüm kampanyaları, ülke bazlı verileri, gönderim durumlarını ve kalan kredileri tek panelde takip edin.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Fuar Keşfi" data-color="#7c3aed">
+          <div class="ip-story-shot js-lightbox" data-title="Fuar ve Pazar Keşfi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/data-cikarma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/data-cikarma.webp" alt="Fuar ve pazar keşfi">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>11 / 13</span>
+            <h3>Sektörel fuar ve pazar keşfi yapın</h3>
+            <p>Hedef ülkedeki sektörel fırsatları ve potansiyel müşteri kaynaklarını dijital olarak araştırın.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Rakip Analizi" data-color="#f59e0b">
+          <div class="ip-story-shot js-lightbox" data-title="Rakip ve Pazar Analizi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp" alt="Rakip analizi">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>12 / 13</span>
+            <h3>Rakiplerinizi ve pazarınızı analiz edin</h3>
+            <p>Hedef pazardaki rakipleri, ürün konumlarını ve potansiyel fırsatları daha net görün.</p>
+          </div>
+        </article>
+
+        <article class="ip-story-card" data-label="Raporlama" data-color="#071a3d">
+          <div class="ip-story-shot js-lightbox" data-title="Günlük Raporlama" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp" alt="Günlük raporlama ekranı">
+            <button type="button">⌕ Büyüt</button>
+          </div>
+          <div class="ip-story-copy">
+            <span>13 / 13</span>
+            <h3>Her gün performans raporu alın</h3>
+            <p>Kaç firma bulundu, kaç e-posta hazırlandı, kaç gönderim tamamlandı ve kalan krediniz ne durumda; hepsi raporlanır.</p>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="ip-story-bottom">
+        <div class="ip-story-small-status">
+          <strong id="ipStoryCounterBottom">01 / 13</strong>
+          <span id="ipStoryLabelBottom">Panel</span>
+        </div>
+
+        <button type="button" class="ip-story-back" id="ipStoryBack">
+          ↑ Başa dön
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-card">
+          <div class="stats-copy">
+            <div class="eyebrow light reveal"><i></i> 24 Saat Çalışan İhracat Otomasyonu</div>
+
+            <h2 class="reveal">Yeni Pazarlara İhracat Pro ile <span>Daha Hızlı Ulaşın</span></h2>
+
+            <p class="reveal">
+              Potansiyel müşteri bulma, içerik üretimi ve e-posta otomasyonu süreçlerini tek platformda birleştirin. Zaman kazanın, gelirinizi artırın.
+            </p>
+
+            <div class="stats-actions reveal">
+              <a href="#final" class="btn btn-primary">Hemen Başla →</a>
+              <a href="#gallery" class="btn btn-outline">Ekranları İncele</a>
+            </div>
+          </div>
+
+          <div class="stats-grid reveal">
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+              </div>
+              <strong>195+</strong>
+              <span>Ülke<br>Dünya çapında erişim</span>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <strong>12.458</strong>
+              <span>Potansiyel Firma<br>Aktif veri tabanı</span>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              </div>
+              <strong>8.732</strong>
+              <span>Gönderilen E-posta<br>Bu ay</span>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+              </div>
+              <strong>%18,7</strong>
+              <span>Yanıt Oranı<br>Sektör ortalamasının üstü</span>
+            </div>
+
+            <div class="stat-box stat-wide">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div>
+                <strong>7/24</strong>
+                <span>Çalışan Sistem<br>Hiç durmadan çalışır</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow light reveal"><i></i> 7/24 Çalışan İhracat Pazarlama Otomasyonu</div>
+            <h2 class="section-title reveal">Yapay Zeka Destekli İhracat Otomasyonu ile <span>Büyüyün</span></h2>
+          </div>
+          <p class="section-desc reveal">
+            Yapay zeka ile içerik üretin, otomatik e-posta kampanyaları oluşturun ve 195+ ülkede yeni müşterilere ulaşın. Tüm süreçleri tek platformda yönetin.
+          </p>
+        </div>
+
+        <div class="feature-row reveal">
+          <div class="feature-card">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+            </div>
+            <strong>195+ Ülke</strong>
+            <span>Küresel erişim</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.7 5.2L19 10l-5.3 1.8L12 17l-1.7-5.2L5 10l5.3-1.8L12 3z"/></svg>
+            </div>
+            <strong>AI Destekli İçerik</strong>
+            <span>Akıllı içerik üretimi</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            </div>
+            <strong>Otomatik E-posta</strong>
+            <span>Kişiselleştirilmiş kampanyalar</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <strong>7/24 Çalışan Sistem</strong>
+            <span>Hiç durmadan çalışır</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <strong>KVKK Uyumlu</strong>
+            <span>Verileriniz güvende</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-band" id="automation">
+      <div class="container">
+        <div class="dark-layout">
+          <div class="mini-stack reveal">
+            <div class="mini-card">
+              <strong>AI İçerik Üretici</strong>
+              <ul>
+                <li>Ürün açıklaması</li>
+                <li>E-posta metni</li>
+                <li>Blog yazısı</li>
+              </ul>
+            </div>
+
+            <div class="mini-card">
+              <strong>Kampanya Performansı</strong>
+              <ul>
+                <li>Açılma oranı</li>
+                <li>Yanıt oranı</li>
+                <li>Ülke bazlı sonuç</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="dark-center reveal">
+            <div class="eyebrow"><i></i> Yapay Zeka Destekli Platform</div>
+            <h2>Potansiyel Müşterileri Bulun, Kampanyaları Otomatik Yönetin</h2>
+            <p>
+              AI destekli segmentasyon, içerik üretimi ve otomatik e-posta kampanyaları ile ihracat pazarlamanızı uçtan uca yönetin.
+            </p>
+
+            <div class="dark-actions">
+              <a href="#final" class="btn btn-primary">Canlı Demo İzle →</a>
+              <a href="#pricing" class="btn btn-dark-outline">Ücretsiz Deneyin</a>
+            </div>
+
+            <div class="orbit">
+              <div class="orbit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+              </div>
+              <div class="orbit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+              </div>
+              <div class="orbit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-stack reveal">
+            <div class="mini-card">
+              <strong>Otomatik E-posta</strong>
+              <ul>
+                <li>Hoş geldin e-postası</li>
+                <li>Takip e-postası</li>
+                <li>Teklif e-postası</li>
+              </ul>
+            </div>
+
+            <div class="mini-card">
+              <strong>Hedef Ülkeler</strong>
+              <ul>
+                <li>Almanya</li>
+                <li>İspanya</li>
+                <li>Birleşik Arap Emirlikleri</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section" id="dashboard">
+      <div class="container">
+        <div class="dashboard-wrap">
+          <div class="dashboard-mock reveal js-lightbox" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp" data-title="Tam Otomasyon Kampanyaları">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp" alt="İhracat Pro dashboard laptop ekranı">
+          </div>
+
+          <div class="dashboard-copy reveal">
+            <div class="eyebrow light"><i></i> Tek Panel · Tam Kontrol</div>
+            <h2 class="section-title">Tek Panelden Tüm İhracat Sürecinizi Yönetin</h2>
+            <p class="section-desc" style="margin-top:18px;">
+              Potansiyel müşteri bulma, AI içerik üretimi, otomatik e-posta kampanyaları ve detaylı raporlar tek panelde. İhracat pazarlamanızı kolaylaştırın, büyümenize odaklanın.
+            </p>
+
+            <ul class="check-list">
+              <li><b>✓</b> 195+ ülkede doğrulanmış firma verileri</li>
+              <li><b>✓</b> AI ile saniyeler içinde içerik üretimi</li>
+              <li><b>✓</b> Otomatik ve kişiselleştirilmiş e-posta kampanyaları</li>
+              <li><b>✓</b> Detaylı raporlar ile performans takibi</li>
+              <li><b>✓</b> KVKK uyumlu ve güvenli altyapı</li>
+            </ul>
+
+            <div class="dashboard-actions">
+              <a href="#final" class="btn btn-primary">Hemen Başla →</a>
+              <a href="#gallery" class="btn btn-outline">Ürün Ekranlarını Gör</a>
+            </div>
+
+            <div class="metrics-row">
+              <div><strong>5.000+</strong> Aktif Kullanıcı</div>
+              <div><strong>%98</strong> Müşteri Memnuniyeti</div>
+              <div><strong>7/24</strong> Uzman Destek</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow light reveal"><i></i> Ürün Ekranları</div>
+            <h2 class="section-title reveal">Müşteriniz sistemi sadece okumaz, <span>ekranları açıp inceler</span></h2>
+          </div>
+          <p class="section-desc reveal">
+            Tüm ürün görselleri tıklanabilir hale getirildi. Böylece ziyaretçi sistemin firma analizi, hedef ülke seçimi, müşteri listesi, içerik üretimi ve otomasyon ekranlarını yakından görebilir.
+          </p>
+        </div>
+
+        <div class="gallery-grid reveal">
+          <figure class="gallery-item js-lightbox" data-title="Firma Analizi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp" alt="Firma analizi">
+            <figcaption>Firma Analizi <span>Firma bilgileri ve profil çıkarımı</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Hedef Ülkeleri Seç" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/ulke-sec.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/ulke-sec.webp" alt="Hedef ülke seçimi">
+            <figcaption>Hedef Ülke Seçimi <span>Kampanya ülkelerini belirleme</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Potansiyel Müşteriler" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/potansiyel-musteri.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/potansiyel-musteri.webp" alt="Potansiyel müşteri listesi">
+            <figcaption>Potansiyel Müşteriler <span>Firma, e-posta ve iletişim listesi</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Veri Çıkarma Kampanyaları" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/data-cikarma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/data-cikarma.webp" alt="Data çıkarma">
+            <figcaption>Data Çıkarma <span>Ülke bazlı müşteri kampanyaları</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Mail İçerik Üretimi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-icerik-uretimi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-icerik-uretimi.webp" alt="Mail içerik üretimi">
+            <figcaption>AI İçerik Üretimi <span>Kişiselleştirilmiş e-posta üretimi</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Otomatik Mail Gönderimi" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-gonderimi.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/mail-gonderimi.webp" alt="Mail gönderimi">
+            <figcaption>Otomatik Gönderim <span>Keşif, içerik ve gönderim akışı</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="7/24 Kesintisiz Çalışma" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp" alt="7/24 otomasyon ekranı">
+            <figcaption>7/24 Otomasyon <span>Kesintisiz veri, içerik ve gönderim</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Tam Otomasyon Paneli" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/Laptop-mockup.webp" alt="Laptop dashboard">
+            <figcaption>Tam Otomasyon Paneli <span>Kampanyalarınızı tek ekrandan yönetin</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="AI El Görseli" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/hand.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/hand.webp" alt="AI robot el görseli">
+            <figcaption>AI Destekli Sistem <span>Otomasyon vurgusu için görsel</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="AI El Görseli 2" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/hand2.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/hand2.webp" alt="AI robot el görseli 2">
+            <figcaption>Yapay Zeka Desteği <span>Akıllı iş akışı vurgusu</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Soyut Dalga Görseli" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/lines.webp">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/lines.webp" alt="Soyut çizgi görseli">
+            <figcaption>Teknoloji Doku Görseli <span>Premium arka plan kullanımı</span></figcaption>
+          </figure>
+
+          <figure class="gallery-item js-lightbox" data-title="Soyut Dalga Görseli 2" data-full="https://alacati.demoland.website/wp-content/uploads/2026/04/lines2.png">
+            <img src="https://alacati.demoland.website/wp-content/uploads/2026/04/lines2.png" alt="Soyut çizgi görseli 2">
+            <figcaption>Dijital Akış Görseli <span>Kurumsal teknoloji atmosferi</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing-section" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow light reveal"><i></i> Kredi Bazlı Kullanım</div>
+            <h2 class="section-title reveal">Abonelik Baskısı Yok, <span>Kullandığınız Kadar Ödeyin</span></h2>
+          </div>
+          <p class="section-desc reveal">
+            Firma keşfi, otomatik gönderim, LinkedIn profil keşfi, fuar araştırması ve rakip analizi gibi işlemler kredi bazlı çalışır. Kayıt sonrası 50 kredi ile sistemi deneyebilirsiniz.
+          </p>
+        </div>
+
+        <div class="pricing-card">
+          <div class="price-main reveal">
+            <div class="eyebrow"><i></i> Standart Kredi</div>
+            <h3>Tüm modüllerde kullanılan tek kredi sistemi</h3>
+
+            <div class="price">
+              <strong>10₺</strong>
+              <span>/ 1 kredi</span>
+            </div>
+
+            <p>
+              İhtiyacınız kadar kredi alın, tüm ihracat pazarlama süreçlerinde kullanın. Kayıt sonrası 50 kredi ücretsiz başlangıç.
+            </p>
+
+            <a href="#final" class="btn btn-primary">50 Kredi ile Başla</a>
+          </div>
+
+          <div class="credit-table reveal">
+            <div class="credit-row"><b>1</b><strong>Potansiyel müşteri keşfi</strong><span>1 kredi / firma</span></div>
+            <div class="credit-row"><b>2</b><strong>Tam otomatik gönderim</strong><span>3 kredi / firma</span></div>
+            <div class="credit-row"><b>3</b><strong>Manuel e-posta gönderimi</strong><span>1 kredi / e-posta</span></div>
+            <div class="credit-row"><b>4</b><strong>LinkedIn profil keşfi</strong><span>1 kredi / profil</span></div>
+            <div class="credit-row"><b>5</b><strong>Fuar keşfi</strong><span>1 kredi / fuar</span></div>
+            <div class="credit-row"><b>6</b><strong>Fuar katılımcısı çıkarma</strong><span>1 kredi / çıkarım</span></div>
+            <div class="credit-row"><b>7</b><strong>Rakip analizi</strong><span>1 kredi / rakip</span></div>
+            <div class="credit-row"><b>8</b><strong>Ticaret ataşeliği e-posta taslağı</strong><span>1 kredi / taslak</span></div>
+            <div class="credit-row"><b>9</b><strong>Gelen kutusu okuma</strong><span>1 kredi / 5 e-posta</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <div class="container">
+        <div class="faq-layout">
+          <div class="faq-intro reveal">
+            <div class="eyebrow light"><i></i> Başlamadan Önce</div>
+            <h2>Bilmeniz Gerekenler</h2>
+            <p>
+              Sistem kullanımı, kredi yapısı ve kampanya süreçleriyle ilgili en çok merak edilen soruların cevaplarını burada net şekilde bulabilirsiniz.
+            </p>
+          </div>
+
+          <div class="accordion reveal">
+            <div class="acc-item active">
+              <button class="acc-btn">İhracat Pro tam olarak ne yapıyor? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>İhracat Pro, ihracat yapmak isteyen üreticiler için tasarlanmış tam otomatik bir dijital pazarlama platformudur. Web sitenizi analiz eder, ideal alıcı profilini çıkarır, hedef ülkelerde potansiyel firmaları bulur ve her firmaya özel e-posta hazırlayarak iletişim sürecini başlatır.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-btn">Kampanya çalışırken benim ne yapmam gerekiyor? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>Kampanyayı başlattıktan sonra sisteme sürekli müdahale etmeniz gerekmez. İhracat Pro firma keşfi, e-posta içerik üretimi, gönderim ve raporlama süreçlerini otomatik yürütür.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-btn">Kredi sistemi nasıl çalışıyor? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>Aylık abonelik zorunluluğu yoktur. Firma keşfi, tam otomatik gönderim, fuar keşfi, LinkedIn profil keşfi ve rakip analizi gibi işlemler kredi bazlı çalışır. Krediler kullandığınız işlem kadar harcanır.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-btn">E-postalar spam'e düşer mi? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>Sistem şablon mesajlar yerine alıcı firmanın web sitesi ve faaliyet alanına göre kişiselleştirilmiş içerikler oluşturur. Kendi kurumsal SMTP adresiniz üzerinden gönderim yapılabildiği için daha doğal ve profesyonel bir gönderim altyapısı kurulabilir.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-btn">Mevcut e-posta altyapımı kullanabilir miyim? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>Evet. Kendi kurumsal SMTP sunucunuzu bağlayarak gönderim yapabilirsiniz. Ayrıca IMAP entegrasyonu ile gelen yanıtları doğrudan panel üzerinden takip edebilirsiniz.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-item">
+              <button class="acc-btn">Ücretsiz deneyebilir miyim? <i>+</i></button>
+              <div class="acc-content">
+                <div class="acc-inner">
+                  <p>Evet. Kayıt sonrası 50 kredi ile platformun temel özelliklerini deneyebilir, firma keşfi ve otomasyon akışını pratikte görebilirsiniz.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="final">
+      <div class="container">
+        <div class="final-card reveal">
+          <div class="eyebrow"><i></i> 7/24 Çalışan İhracat Pazarlama Sistemi</div>
+          <h2>İhracat Pazarlamanızı Bugün Otomatikleştirin</h2>
+          <p>
+            Potansiyel müşteri bulma, yapay zeka destekli içerik üretimi ve otomatik e-posta kampanyaları ile ihracat sürecinizi tek panelden yönetin.
+          </p>
+
+          <div class="final-actions">
+            <a href="#" class="btn btn-light">Hemen Başla →</a>
+            <a href="#" class="btn btn-dark-outline">Demo Talep Et</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-inner">
+      <div class="lightbox-head">
+        <span id="lightboxTitle">Görsel</span>
+        <button class="lightbox-close" id="lightboxClose" aria-label="Kapat">×</button>
+      </div>
+      <div class="lightbox-body">
+        <img id="lightboxImage" src="" alt="">
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
+
+  <script>
+    (() => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener("click", e => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({
+            behavior: reduced ? "auto" : "smooth",
+            block: "start"
+          });
+        });
+      });
+
+      const sleepData = [
+        {
+          title: "Firma Analizi",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/firma-analizi.webp"
+        },
+        {
+          title: "Hedef Ülke Seçimi",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/ulke-sec.webp"
+        },
+        {
+          title: "Potansiyel Müşteriler",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/potansiyel-musteri.webp"
+        },
+        {
+          title: "AI E-posta İçeriği",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/mail-icerik-uretimi.webp"
+        },
+        {
+          title: "Tam Otomatik Gönderim",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/mail-gonderimi.webp"
+        },
+        {
+          title: "7/24 Kesintisiz Çalışma",
+          img: "https://alacati.demoland.website/wp-content/uploads/2026/04/7-24-kesintisiz-calisma.webp"
+        }
+      ];
+
+      const mainImage = document.getElementById("sleepMainImage");
+      const mainShot = document.querySelector(".sleep-main-shot");
+      const sleepPoints = document.querySelectorAll(".sleep-point");
+      const sleepThumbs = document.querySelectorAll(".sleep-thumb");
+
+      function setSleepImage(index) {
+        const item = sleepData[index];
+        if (!item || !mainImage || !mainShot) return;
+
+        mainImage.style.opacity = "0";
+
+        window.setTimeout(() => {
+          mainImage.src = item.img;
+          mainImage.alt = item.title;
+          mainShot.dataset.full = item.img;
+          mainShot.dataset.title = item.title;
+          mainImage.style.opacity = "1";
+        }, 120);
+
+        sleepPoints.forEach(point => point.classList.toggle("active", Number(point.dataset.sleepIndex) === Math.min(index, 4)));
+        sleepThumbs.forEach((thumb, i) => thumb.classList.toggle("active", i === index));
+      }
+
+      sleepPoints.forEach(point => {
+        point.addEventListener("click", () => {
+          const index = Number(point.dataset.sleepIndex);
+          setSleepImage(index);
+        });
+      });
+
+      sleepThumbs.forEach((thumb, index) => {
+        thumb.addEventListener("click", () => setSleepImage(index));
+      });
+
+      let autoSleepIndex = 0;
+      window.setInterval(() => {
+        if (document.hidden) return;
+        autoSleepIndex = (autoSleepIndex + 1) % sleepData.length;
+        setSleepImage(autoSleepIndex);
+      }, 5200);
+
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightboxImage");
+      const lightboxTitle = document.getElementById("lightboxTitle");
+      const lightboxClose = document.getElementById("lightboxClose");
+
+      function openLightbox(src, title) {
+        if (!lightbox || !lightboxImage || !lightboxTitle) return;
+        lightboxImage.src = src;
+        lightboxImage.alt = title || "Görsel";
+        lightboxTitle.textContent = title || "Görsel";
+        lightbox.classList.add("active");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-lightbox-open");
+      }
+
+      function closeLightbox() {
+        if (!lightbox || !lightboxImage) return;
+        lightbox.classList.remove("active");
+        lightbox.setAttribute("aria-hidden", "true");
+        lightboxImage.src = "";
+        document.body.classList.remove("is-lightbox-open");
+      }
+
+      document.querySelectorAll(".js-lightbox").forEach(item => {
+        item.addEventListener("click", () => {
+          const src = item.dataset.full || item.querySelector("img")?.src;
+          const title = item.dataset.title || item.querySelector("figcaption")?.innerText || "Görsel";
+          if (src) openLightbox(src, title);
+        });
+      });
+
+      lightboxClose?.addEventListener("click", closeLightbox);
+
+      lightbox?.addEventListener("click", e => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      window.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      document.querySelectorAll(".acc-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".acc-item");
+          const group = btn.closest(".accordion");
+          group.querySelectorAll(".acc-item").forEach(el => {
+            if (el !== item) el.classList.remove("active");
+          });
+          item.classList.toggle("active");
+        });
+      });
+
+      if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined" && !reduced) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray(".reveal").forEach((el, index) => {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: .75,
+            delay: Math.min(index * .015, .12),
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 86%",
+              once: true
+            }
+          });
+        });
+
+        gsap.to(".hero-feature-stack", {
+          y: -24,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+
+        gsap.to(".sleep-main-shot img", {
+          y: -16,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".sleep-section",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+
+        gsap.utils.toArray(".stat-box, .feature-card, .mini-card, .credit-row, .gallery-item").forEach((card, i) => {
+          gsap.from(card, {
+            y: 26,
+            opacity: 0,
+            duration: .6,
+            delay: i * .025,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              once: true
+            }
+          });
+        });
+      } else {
+        document.querySelectorAll(".reveal").forEach(el => {
+          el.style.opacity = 1;
+          el.style.transform = "none";
+        });
+      }
+    })();
+    
+    
+  </script>
+  
+  <script>
+(() => {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isMobile = window.matchMedia("(max-width: 980px)").matches;
+
+  const story = document.querySelector(".ip-scroll-story");
+  const pin = document.querySelector(".ip-story-pin");
+  const stage = document.getElementById("ipStoryStage");
+  const cards = gsap.utils.toArray(".ip-story-card");
+
+  const counter = document.getElementById("ipStoryCounter");
+  const counterBottom = document.getElementById("ipStoryCounterBottom");
+  const label = document.getElementById("ipStoryLabel");
+  const labelBottom = document.getElementById("ipStoryLabelBottom");
+  const backBtn = document.getElementById("ipStoryBack");
+
+  if (!story || !pin || !stage || !cards.length || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+  gsap.registerPlugin(ScrollTrigger);
+  if (typeof Observer !== "undefined") gsap.registerPlugin(Observer);
+
+  let activeIndex = 0;
+  let isAnimating = false;
+  let storyTrigger = null;
+  let storyObserver = null;
+
+  function pad(num) {
+    return String(num).padStart(2, "0");
+  }
+
+  function setStoryCard(index, animate = true) {
+    index = Math.max(0, Math.min(cards.length - 1, index));
+    if (index === activeIndex && animate) return;
+
+    const oldCard = cards[activeIndex];
+    const newCard = cards[index];
+    const color = newCard.dataset.color || "#0866ff";
+    const title = newCard.dataset.label || "Panel";
+
+    stage.style.setProperty("--story-active", color);
+    newCard.style.setProperty("--card-color", color);
+
+    cards.forEach((card, i) => {
+      card.classList.toggle("is-active", i === index);
+      card.style.setProperty("--card-color", card.dataset.color || "#0866ff");
+    });
+
+    if (counter) counter.textContent = `${pad(index + 1)} / ${pad(cards.length)}`;
+    if (counterBottom) counterBottom.textContent = `${pad(index + 1)} / ${pad(cards.length)}`;
+    if (label) label.textContent = title;
+    if (labelBottom) labelBottom.textContent = title;
+
+    if (animate && !reduced && oldCard && newCard && oldCard !== newCard) {
+      gsap.killTweensOf([oldCard, newCard]);
+
+      gsap.to(oldCard, {
+        autoAlpha: 0,
+        y: -46,
+        scale: .965,
+        duration: .34,
+        ease: "power2.out"
+      });
+
+      gsap.fromTo(newCard,
+        { autoAlpha: 0, y: 54, scale: .965 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: .48, ease: "power3.out" }
+      );
+    } else {
+      cards.forEach((card, i) => {
+        gsap.set(card, {
+          autoAlpha: i === index ? 1 : 0,
+          y: i === index ? 0 : 54,
+          scale: i === index ? 1 : .965
+        });
+      });
+    }
+
+    activeIndex = index;
+  }
+
+  cards.forEach((card, i) => {
+    card.style.setProperty("--card-color", card.dataset.color || "#0866ff");
+    gsap.set(card, {
+      autoAlpha: i === 0 ? 1 : 0,
+      y: i === 0 ? 0 : 54,
+      scale: i === 0 ? 1 : .965
+    });
+  });
+
+  setStoryCard(0, false);
+
+  if (isMobile || reduced) {
+    cards.forEach(card => {
+      gsap.set(card, { clearProps: "all" });
+      card.classList.add("is-active");
+    });
+    return;
+  }
+
+  storyTrigger = ScrollTrigger.create({
+    trigger: story,
+    start: "top top",
+    end: () => "+=" + ((cards.length - 1) * window.innerHeight),
+    pin: pin,
+    pinSpacing: true,
+    anticipatePin: 1,
+    scrub: .55,
+    invalidateOnRefresh: true,
+    snap: {
+      snapTo: 1 / (cards.length - 1),
+      duration: { min: .18, max: .38 },
+      delay: .03,
+      ease: "power2.out"
+    },
+    onUpdate: self => {
+      const index = Math.round(self.progress * (cards.length - 1));
+      if (index !== activeIndex && !isAnimating) {
+        setStoryCard(index, true);
+      }
+    },
+    onEnter: () => storyObserver && storyObserver.enable(),
+    onEnterBack: () => storyObserver && storyObserver.enable(),
+    onLeave: () => {
+      storyObserver && storyObserver.disable();
+      setStoryCard(cards.length - 1, false);
+    },
+    onLeaveBack: () => {
+      storyObserver && storyObserver.disable();
+      setStoryCard(0, false);
+    }
+  });
+
+  function goToStoryIndex(index) {
+    if (!storyTrigger) return;
+
+    index = Math.max(0, Math.min(cards.length - 1, index));
+    isAnimating = true;
+
+    setStoryCard(index, true);
+
+    const targetScroll = storyTrigger.start + (window.innerHeight * index);
+
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth"
+    });
+
+    window.setTimeout(() => {
+      isAnimating = false;
+    }, 680);
+  }
+
+  if (typeof Observer !== "undefined") {
+    storyObserver = Observer.create({
+      target: window,
+      type: "wheel,touch,pointer",
+      tolerance: 14,
+      preventDefault: true,
+      allowClicks: true,
+      onChangeY: self => {
+        if (!storyTrigger || isAnimating) return;
+
+        const direction = self.deltaY > 0 ? 1 : -1;
+
+        if (direction > 0 && activeIndex >= cards.length - 1) {
+          storyObserver.disable();
+          window.scrollTo({
+            top: storyTrigger.end + 2,
+            behavior: "smooth"
+          });
+          return;
+        }
+
+        if (direction < 0 && activeIndex <= 0) {
+          storyObserver.disable();
+          window.scrollTo({
+            top: storyTrigger.start - 2,
+            behavior: "smooth"
+          });
+          return;
+        }
+
+        goToStoryIndex(activeIndex + direction);
+      }
+    });
+
+    storyObserver.disable();
+  }
+
+  backBtn?.addEventListener("click", () => {
+    goToStoryIndex(0);
+  });
+
+  window.addEventListener("resize", () => {
+    ScrollTrigger.refresh();
+  });
+})();
+</script>
+  
+</body>
+</html>
